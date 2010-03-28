@@ -1,22 +1,20 @@
 #ifndef _LIST_
 #define _LIST_
+#include <stdio.h>
+#include <stdlib.h>
 
 /* List of positions */
-typedef struct cellpos{
+typedef struct celpos{
 	int position;
-	struct cellpos* next;
+	struct celpos* next;
 }Celpos,*Listpos;
 
-/* A word (string) go with a list of all its positions */
-typedef struct celword{
-	char *word;
-	Listpos positions;
-}Celword;
+#include "../include/list.h"
 
-/* List of words  */
-typedef struct cell{
-	Celword *value;
-	struct cell* next;
-}Cell,*List;
+Listpos alloc_cell(int value);
+int insert_head(Listpos *l, int value);
+int insert_tail(Listpos *l, int value);
+Listpos last_cell(Listpos l);
+void print_list(Listpos l);
 
 #endif

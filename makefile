@@ -1,7 +1,7 @@
 C=gcc
 CFLAGS=-Wall -ansi
 
-EXEC=Hash-dico
+EXEC=Index
 SRC=$(wildcard src/*.c)
 OBJ=$(SRC:.c=.o)
 
