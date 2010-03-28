@@ -42,6 +42,15 @@ Listpos last_cell_pos(Listpos l){
 	return l;
 }
 
+Listpos search_pos(Listpos l, int value){
+	if(l==NULL)
+		return NULL;
+	for(;l!=NULL;l=l->next)
+		if(l->position==value)
+			return l;
+	return NULL;
+}
+
 void print_list_pos(Listpos l){
 	if(l==NULL)
 		printf("Empty list of positions\n");

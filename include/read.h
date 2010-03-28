@@ -9,7 +9,10 @@
 
 #include <stdio.h>
 #include <string.h>
+#include "../include/word.h"
+#include "../include/util.h"
 
 int get_word(FILE* stream, char* dest);
+int parse_text(char* file_name, List *hash);
 
 #endif

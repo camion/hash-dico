@@ -2,7 +2,10 @@
 #define _UTIL_
 
 #define HASH_TABLE 1024
+#include <stdio.h>
+#include "../include/word.h"
 
 unsigned int hash_string(char *p);
+List* init_hash_table();
 
 #endif

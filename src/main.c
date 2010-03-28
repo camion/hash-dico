@@ -1,17 +1,28 @@
 #include <stdio.h>
 #include "../include/read.h"
+#include "../include/util.h"
+#include "../include/word.h"
 
 int main(int argc, char* argv[]){
-	char s[WORD_BUFFER];
-	int result;
-	FILE* f=fopen(argv[1],"r");
-	if(f==NULL){
-		fprintf(stderr,"Error opening file\n");
+	List *hash=init_hash_table();
+	if(!parse_text(argv[1],hash)){
 		return 0;
 	}
-	while((result=get_word(f,s))!=EOF)
-		printf("%d:%s\n",result,s);
-	fclose(f);
+	/* TEMP */
+	char chaine[256];
+	List tmpword;
+	Listpos tmppos;
+	printf("Hash table filled succesfully !\n");
+	printf("Type the word you search :\n");
+	scanf("%s",chaine);
+	if((tmpword=search_word(hash[hash_string(chaine)%HASH_TABLE],chaine))!=NULL){
+		printf("Search:%s\n",tmpword->value->word);
+		printf("Appear in (bytes) : ");
+		for(tmppos=tmpword->value->positions;tmppos!=NULL;tmppos=tmppos->next)
+			printf("%d ",tmppos->position);
+		printf("\n");
+	}
+	/* TEMP */
 	return 0;
 }
 

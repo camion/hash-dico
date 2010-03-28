@@ -41,3 +41,43 @@ int get_word(FILE* stream, char* dest){
 	return 0;
 }
 
+/*
+	Analyses all the text and indexes each word
+	Fills the hash table with lists of words
+*/
+int parse_text(char* file_name, List *hash){
+	FILE* text;
+	List tmp_word;
+	Listpos tmp_pos;
+	char word[WORD_BUFFER];
+	int result=0;
+	int offset;
+	int key;
+	if((text=fopen(file_name,"r"))==NULL){
+		fprintf(stderr,"Error while opening %s\n",file_name);
+		return 0;
+	}
+	offset=ftell(text);
+	while(result!=EOF){
+		if(result==2)
+			offset=ftell(text);
+		result=get_word(text,word);
+		if(word[0]=='\0')
+			continue;
+		key=hash_string(word)%HASH_TABLE;
+		/* Not in hash table -> we add it */
+		if((tmp_word=search_word(hash[key],word))==NULL){
+			insert_head_word(&hash[key],word);
+			insert_tail_pos(&(hash[key]->value->positions),offset);
+		}
+		/* if already in hash table -> we add its position */
+		else{
+			if((tmp_pos=search_pos(tmp_word->value->positions,offset))==NULL){
+				insert_tail_pos(&(hash[key]->value->positions),offset);
+			}
+		}
+	}
+	fclose(text);
+	return 1;
+}
+
