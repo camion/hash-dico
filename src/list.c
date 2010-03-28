@@ -1,17 +1,17 @@
 #include "../include/list.h"
 
-Listpos alloc_cell(int value){
+Listpos alloc_cell_pos(int value){
 	Listpos new_cell;
-	if((new_cell=malloc(sizeof(Celpos)))!=NULL){
+	if((new_cell=malloc(sizeof(Cellpos)))!=NULL){
 		new_cell->position=value;
 		new_cell->next=NULL;
 	}
 	return new_cell;
 }
 
-int insert_head(Listpos *l, int value){
+int insert_head_pos(Listpos *l, int value){
 	Listpos new_cell;
-	if((new_cell=alloc_cell(value))==NULL){
+	if((new_cell=alloc_cell_pos(value))==NULL){
 		fprintf(stderr,"Error while allocating a position\n");
 		return 0;
 	}
@@ -20,31 +20,31 @@ int insert_head(Listpos *l, int value){
 	return 1;
 }
 
-int insert_tail(Listpos *l, int value){
+int insert_tail_pos(Listpos *l, int value){
 	Listpos new_cell;
 	Listpos last;
-	if((new_cell=alloc_cell(value))==NULL){
-		fprintf(stderr,"Error while allocating a position\n");
+	if((new_cell=alloc_cell_pos(value))==NULL){
+		fprintf(stderr,"Error while inserting a position\n");
 		return 0;
 	}
 	if(*l==NULL)
 		*l=new_cell;
 	else{
-		last=last_cell(*l);
+		last=last_cell_pos(*l);
 		last->next=new_cell;
 	}
 	return 1;
 }
 
-Listpos last_cell(Listpos l){
+Listpos last_cell_pos(Listpos l){
 	while(l!=NULL && l->next!=NULL)
 		l=l->next;
 	return l;
 }
 
-void print_list(Listpos l){
+void print_list_pos(Listpos l){
 	if(l==NULL)
-		printf("Empty list\n");
+		printf("Empty list of positions\n");
 	for(;l!=NULL;l=l->next)
 		printf("%p [ %4d -> %p ]\n",l,l->position,l->next);
 }

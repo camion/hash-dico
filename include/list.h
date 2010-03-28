@@ -4,17 +4,17 @@
 #include <stdlib.h>
 
 /* List of positions */
-typedef struct celpos{
+typedef struct cellpos{
 	int position;
-	struct celpos* next;
-}Celpos,*Listpos;
+	struct cellpos* next;
+}Cellpos,*Listpos;
 
 #include "../include/list.h"
 
-Listpos alloc_cell(int value);
-int insert_head(Listpos *l, int value);
-int insert_tail(Listpos *l, int value);
-Listpos last_cell(Listpos l);
-void print_list(Listpos l);
+Listpos alloc_cell_pos(int value);
+int insert_head_pos(Listpos *l, int value);
+int insert_tail_pos(Listpos *l, int value);
+Listpos last_cell_pos(Listpos l);
+void print_list_pos(Listpos l);
 
 #endif
