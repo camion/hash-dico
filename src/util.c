@@ -1,6 +1,6 @@
 #include  "../include/util.h"
 
-unsigned int hash(char *p){
+unsigned int hash_string(char *p){
 	unsigned int h=0,g;
 	for(;*p;p++){
 		h = (h<<4) + *p;

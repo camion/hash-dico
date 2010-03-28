@@ -1,11 +1,17 @@
 #include <stdio.h>
-#include "../include/word.h"
+#include "../include/read.h"
 
 int main(int argc, char* argv[]){
-	List w=NULL;
-	insert_head_word(&w,"et");
-	insert_head_word(&w,"merde");
-	print_list_word(w);
+	char s[WORD_BUFFER];
+	int result;
+	FILE* f=fopen(argv[1],"r");
+	if(f==NULL){
+		fprintf(stderr,"Error opening file\n");
+		return 0;
+	}
+	while((result=get_word(f,s))!=EOF)
+		printf("%d:%s\n",result,s);
+	fclose(f);
 	return 0;
 }
 

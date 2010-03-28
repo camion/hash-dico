@@ -2,28 +2,6 @@
 #include "../include/list.h"
 
 
-/*
-	Returns 3 values :
-	1	: the word is extracted, everything is OK
-	2	: the word extracted is the last word of the phrase
-	EOF	: no more word to extract -> End Of File
-*/
-int get_word(FILE* stream){
-	char c=0;
-	int index=0;
-	char word[256];
-	while((c=fgetc(stream)) && c!=EOF && c!=' ' && c!= '!' && c!='?' && c!='\n' && c!='\t'){
-		word[index]=c;
-		index++;
-	}
-	if(index!=0){
-		word[index]='\0';
-		printf("%s\n",word);
-	}
-	if(c==EOF)
-		return 0;
-	return 1;
-}
 
 /*
 	Allocate memory for word
@@ -65,12 +43,43 @@ List alloc_cell_word(char* word){
 int insert_head_word(List *w, char* word){
 	List new_cell;
 	if((new_cell=alloc_cell_word(word))==NULL){
-		fprintf(stderr,"Error inserting a word\n");		
+		fprintf(stderr,"Error while inserting a word\n");		
 		return 0;
 	}
 	new_cell->next=*w;
 	*w=new_cell;
 	return 1;
+}
+
+int insert_tail_word(List *w, char* word){
+	List new_cell;
+	List last;
+	if((new_cell=alloc_cell_word(word))==NULL){
+		fprintf(stderr,"Error while inserting a word\n");
+		return 0;
+	}
+	if(*w==NULL)
+		*w=new_cell;
+	else{
+		last=last_cell_word(*w);
+		last->next=new_cell;
+	}
+	return 1;
+}
+
+List last_cell_word(List w){
+	while(w!=NULL && w->next!=NULL)
+		w=w->next;
+	return w;
+}
+
+List search_word(List w,char* word){
+	if(w==NULL)
+		return NULL;
+	for(;w!=NULL;w=w->next)
+		if(strcmp(w->value->word,word)==0)
+			return w;
+	return NULL;
 }
 
 void print_list_word(List w){
