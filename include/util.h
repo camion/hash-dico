@@ -7,5 +7,6 @@
 
 unsigned int hash_string(char *p);
 List* init_hash_table();
+void free_hash(List *hash);
 
 #endif

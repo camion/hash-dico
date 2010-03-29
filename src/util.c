@@ -20,3 +20,12 @@ List* init_hash_table(){
 	}
 	return hash;
 }
+
+void free_hash(List *hash){
+	int i;
+	for(i=0;i<HASH_TABLE;i++){
+		free_list_word(&hash[i]);
+	}
+	free(hash);
+}
+

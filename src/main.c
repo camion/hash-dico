@@ -4,12 +4,10 @@
 #include "../include/word.h"
 
 int main(int argc, char* argv[]){
-	List w=NULL;
-	insert_lexico_word(&w,"bateau");
-	insert_lexico_word(&w,"avion");
-	insert_lexico_word(&w,"aviateur");	
-	print_list_word(w);
-	free_list_word(&w);
+	List *hash=init_hash_table();
+	if(!parse_text(argv[1],hash))
+		return 2;
+	free_hash(hash);
 	return 0;
 }
 
