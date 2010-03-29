@@ -1,5 +1,5 @@
-C=gcc
-CFLAGS=-Wall -ansi
+CC=gcc
+CFLAGS=-Wall -ansi -g
 
 EXEC=Index
 SRC=$(wildcard src/*.c)
@@ -8,7 +8,7 @@ OBJ=$(SRC:.c=.o)
 all: $(EXEC)
 
 $(EXEC): $(OBJ)
-	@$(C) -o $@ $^
+	@$(CC) -o $@ $^
 	@echo "  > $@ : Compilation done."
 
 .PHONY: clean recompile
@@ -20,4 +20,4 @@ clean:
 	@echo "  > $(OBJ) $(exec) cleaned."
 
 %.o: %.c
-	@$(C) -c $(CFLAGS) $< -o $*.o
+	@$(CC) -c $(CFLAGS) $< -o $*.o

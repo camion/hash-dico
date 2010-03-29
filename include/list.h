@@ -17,5 +17,6 @@ int insert_tail_pos(Listpos *l, int value);
 Listpos last_cell_pos(Listpos l);
 Listpos search_pos(Listpos l, int value);
 void print_list_pos(Listpos l);
+void free_list_pos(Listpos *l);
 
 #endif

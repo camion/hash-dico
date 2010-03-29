@@ -4,9 +4,9 @@
 
 
 /*
-	Allocate memory for word
+	Allocates memory for a word
 	The size of the string is not considered
-	An empty word will be inserted
+	An empty word can be inserted
 	Returns the new allocated cell, or NULL if a memmory error occured
 */
 List alloc_cell_word(char* word){
@@ -36,9 +36,6 @@ List alloc_cell_word(char* word){
 
 /*
 	Insert a word word at the top of the list
-	The size of the string is not considered
-	An empty word can be inserted
-	Returns 1 if *word is inserted succesfully, 0 either
 */
 int insert_head_word(List *w, char* word){
 	List new_cell;
@@ -51,6 +48,9 @@ int insert_head_word(List *w, char* word){
 	return 1;
 }
 
+/*
+	Inserts a word at the tail of the list
+*/
 int insert_tail_word(List *w, char* word){
 	List new_cell;
 	List last;
@@ -63,6 +63,44 @@ int insert_tail_word(List *w, char* word){
 	else{
 		last=last_cell_word(*w);
 		last->next=new_cell;
+	}
+	return 1;
+}
+
+/*
+	Inserts a word into the list w respecting the lexicographical order
+*/
+int insert_lexico_word(List *w, char* word){
+	List new_cell;
+	List tmp1,tmp2;
+	if((new_cell=alloc_cell_word(word))==NULL){
+		fprintf(stderr,"Error while inserting a word\n");
+		return 0;
+	}
+	if(*w==NULL)
+		*w=new_cell;
+	else{
+		if((*w)->next==NULL){
+			if(strcmp(word,(*w)->value->word)<=0){
+				new_cell->next=*w;
+				*w=new_cell;
+			}
+			else
+				(*w)->next=new_cell;
+			return 1;
+		}
+		if(strcmp(word,(*w)->value->word)<=0){
+			new_cell->next=*w;
+			*w=new_cell;
+			return 1;
+		}
+		tmp1=tmp2=*w;
+		while(tmp2!=NULL && strcmp(tmp2->value->word,word)<=0){
+			tmp1=tmp2;
+			tmp2=tmp2->next;
+		}
+		new_cell->next=tmp2;
+		tmp1->next=new_cell;
 	}
 	return 1;
 }
@@ -90,5 +128,18 @@ void print_list_word(List w){
 	for(;w!=NULL;w=w->next)
 		printf("%p [ %s -> %p ]\n",w,w->value->word,w->next);
 	
+}
+
+void free_list_word(List *w){
+	List tmp=*w;
+	while(*w!=NULL){
+		tmp=(*w)->next;
+		free_list_pos(&(*w)->value->positions);
+		free((*w)->value->word);
+		free((*w)->value);
+		free(*w);
+		*w=tmp;
+	}
+	*w=NULL;
 }
 

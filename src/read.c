@@ -13,6 +13,7 @@ int get_word(FILE* stream, char* dest){
 	char c;
 	int index=0;
 	int flag_eow=FALSE;
+	int size_dest=0;
 	char word[WORD_BUFFER];
 	while((c=fgetc(stream)) && c!=EOF && !END_OF_PHRASE(c) && index < WORD_BUFFER){
 		if(END_OF_WORD(c) && index==0)
@@ -31,7 +32,8 @@ int get_word(FILE* stream, char* dest){
 		}
 	}
 	word[index]='\0';
-	strcpy(dest,word);
+	size_dest=strlen(dest);
+	strncpy(dest,word,(index<=size_dest?index:size_dest));
 	if(c==EOF)
 		return EOF;
 	else if(END_OF_PHRASE(c))
@@ -48,7 +50,6 @@ int get_word(FILE* stream, char* dest){
 int parse_text(char* file_name, List *hash){
 	FILE* text;
 	List tmp_word;
-	Listpos tmp_pos;
 	char word[WORD_BUFFER];
 	int result=0;
 	int offset;
@@ -65,15 +66,16 @@ int parse_text(char* file_name, List *hash){
 		if(word[0]=='\0')
 			continue;
 		key=hash_string(word)%HASH_TABLE;
+		tmp_word=search_word(hash[key],word);
 		/* Not in hash table -> we add it */
-		if((tmp_word=search_word(hash[key],word))==NULL){
-			insert_head_word(&hash[key],word);
-			insert_tail_pos(&(hash[key]->value->positions),offset);
+		if(tmp_word==NULL){
+			insert_lexico_word(&hash[key],word);
+			insert_head_pos(&(hash[key]->value->positions),offset);
 		}
 		/* if already in hash table -> we add its position */
 		else{
-			if((tmp_pos=search_pos(tmp_word->value->positions,offset))==NULL){
-				insert_tail_pos(&(hash[key]->value->positions),offset);
+			if(tmp_word->value->positions->position!=offset){
+				insert_head_pos(&(hash[key]->value->positions),offset);
 			}
 		}
 	}

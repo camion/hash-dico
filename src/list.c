@@ -58,3 +58,13 @@ void print_list_pos(Listpos l){
 		printf("%p [ %4d -> %p ]\n",l,l->position,l->next);
 }
 
+void free_list_pos(Listpos *l){
+	Listpos tmp=*l;
+	while(*l!=NULL){
+		tmp=(*l)->next;
+		free(*l);
+		*l=tmp;
+	}
+	*l=NULL;
+}
+
