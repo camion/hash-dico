@@ -12,7 +12,7 @@
 #include "../include/word.h"
 #include "../include/util.h"
 
-int get_word(FILE* stream, char* dest);
+int get_word(FILE* stream, char* dest, size_t n);
 int parse_text(char* file_name, List *hash);
 
 #endif
