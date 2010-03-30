@@ -9,11 +9,10 @@
   2     : the word extracted is the last word of the phrase
   EOF   : no more word to extract -> End Of File
 */
-int get_word(FILE* stream, char* dest){
+int get_word(FILE* stream, char* dest, size_t n){
 	char c;
 	int index=0;
 	int flag_eow=FALSE;
-	int size_dest=0;
 	char word[WORD_BUFFER];
 	while((c=fgetc(stream)) && c!=EOF && !END_OF_PHRASE(c) && index < WORD_BUFFER){
 		if(END_OF_WORD(c) && index==0)
@@ -33,8 +32,8 @@ int get_word(FILE* stream, char* dest){
 	}
 	word[index]='\0';
 	if(index>0){
-		size_dest=strlen(dest);
-		strcpy(dest,word);	/* TODO strncpy */
+		printf("%s\n",word);
+		strncpy(dest,word,n);
 	}
 	if(c==EOF)
 		return EOF;
@@ -65,7 +64,9 @@ int parse_text(char* file_name, List *hash){
 	while(result!=EOF){
 		if(result==2)
 			offset=ftell(text);
-		result=get_word(text,word);
+		result=get_word(text,word,WORD_BUFFER);
+		if(result==EOF)
+			break;
 		if(word[0]=='\0')
 			continue;
 		key=hash_string(word)%HASH_TABLE;
@@ -77,9 +78,8 @@ int parse_text(char* file_name, List *hash){
 		}
 		/* if already in hash table -> we add its position */
 		else{
-			if(tmp_word->value->positions!=NULL && tmp_word->value->positions->position!=offset){
+			if(tmp_word->value->positions!=NULL && tmp_word->value->positions->position!=offset)
 				insert_head_pos(&(hash[key]->value->positions),offset);
-			}
 		}
 	}
 	fclose(text);

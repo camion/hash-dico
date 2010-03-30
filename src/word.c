@@ -11,6 +11,7 @@
 */
 List alloc_cell_word(char* word){
 	List new_cell;
+	int size;
 	/* Allocates the box of the cell (Cellword + List) */
 	if((new_cell=malloc(sizeof(Cell)))==NULL){
 		fprintf(stderr,"Error while allocating a cell\n");
@@ -21,15 +22,16 @@ List alloc_cell_word(char* word){
 		fprintf(stderr,"Error while allocating a cell\n");
 		return NULL;
 	}
+	size=strlen(word);
 	/* Allocates the string */
-	if((new_cell->value->word=malloc(strlen(word)*sizeof(char)))==NULL){
+	if((new_cell->value->word=malloc(size*sizeof(char)+1))==NULL){
 		fprintf(stderr,"Error while allocating a word\n");
 		return NULL;
 	}
 	/* The list of its position is void */
 	new_cell->value->positions=NULL;
 	/* Copy the word into the new cell. We can use strcpy in place of strncpy because we have allocated exactly the place needed*/
-	strcpy(new_cell->value->word,word);
+	strncpy(new_cell->value->word,word,size+1);
 	new_cell->next=NULL;
 	return new_cell;
 }
