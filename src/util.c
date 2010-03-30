@@ -1,6 +1,7 @@
 #include  "../include/util.h"
 
 unsigned int hash_string(char *p){
+/* maybe try with (i+1)*word[i] */
 	unsigned int h=0,g;
 	for(;*p;p++){
 		h = (h<<4) + *p;
