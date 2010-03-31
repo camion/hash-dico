@@ -4,6 +4,7 @@
 #define WORD_BUFFER 256
 #define END_OF_WORD(c) ((c==' ' || c=='\t' || c=='\n'))
 #define END_OF_PHRASE(c) ((c=='.' || c=='?' || c=='!'))
+typedef int BOOL;
 #define TRUE 1
 #define FALSE 0
 

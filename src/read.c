@@ -31,10 +31,8 @@ int get_word(FILE* stream, char* dest, size_t n){
 		}
 	}
 	word[index]='\0';
-	if(index>0){
-		printf("%s\n",word);
+	if(index>0)
 		strncpy(dest,word,n);
-	}
 	if(c==EOF)
 		return EOF;
 	else if(END_OF_PHRASE(c))
@@ -84,5 +82,9 @@ int parse_text(char* file_name, List *hash){
 	}
 	fclose(text);
 	return 1;
+}
+
+BOOL word_is_in_text(List *hash, char *word){
+	return ((search_word(hash[hash_string(word)%HASH_TABLE],word))?TRUE:FALSE);
 }
 
