@@ -39,28 +39,28 @@ List alloc_cell_word(char* word){
 /*
   Insert a word at the head of the list
 */
-void insert_head_word(List *w, char* word){
-    List new_cell;
-    new_cell=alloc_cell_word(word);
-    new_cell->next=*w;
-    *w=new_cell;
-    return 1;
-}
+/* void insert_head_word(List *w, char* word){ */
+/*     List new_cell; */
+/*     new_cell=alloc_cell_word(word); */
+/*     new_cell->next=*w; */
+/*     *w=new_cell; */
+/*     return 1; */
+/* } */
 
 /*
   Inserts a word at the tail of the list
 */
-void insert_tail_word(List *w, char* word){
-    List new_cell;
-    List last;
-    new_cell=alloc_cell_word(word);
-    if(*w==NULL)
-        *w=new_cell;
-    else{
-        last=last_cell_word(*w);/*O(n)*/
-        last->next=new_cell;
-    }
-}
+/* void insert_tail_word(List *w, char* word){ */
+/*     List new_cell; */
+/*     List last; */
+/*     new_cell=alloc_cell_word(word); */
+/*     if(*w==NULL) */
+/*         *w=new_cell; */
+/*     else{ */
+/*         last=last_cell_word(*w);/\*O(n)*\/ */
+/*         last->next=new_cell; */
+/*     } */
+/* } */
 
 /*
   Inserts a word into the list *w respecting the lexicographical order
@@ -99,31 +99,48 @@ void insert_tail_word(List *w, char* word){
 /*     return 1; */
 /* } */
 
-int insert_lexico_word(List *w, char* word){
-    List new_cell;
-    List tmp1,tmp2;
+void insert_lexico_word(List *w, char* word, long offset){
+    List new_cell, tmp1, tmp2;
+    int result;
 
     new_cell=alloc_cell_word(word);
 /*if the list *w is empty*/
     if(*w==NULL)
-        *w=new_cell;
-    else if(srtcmp()<0){
+        *w = new_cell;
+    else if(strcmp(word, (*w)->value->word)<0){
 /*if the word is < head*/
+        new_cell->next = *w;
+        *w = new_cell;
+    }else{
+/* search word's position */
+        tmp1=tmp2=*w;
+        while(tmp2 != NULL && (result=strcmp(tmp2->value->word, word))<0){
+	    if(!result)/* already in list */
+		goto positionning;
 
+            tmp1 = tmp2;
+            tmp2 = tmp2->next;
+        }
+        new_cell->next = tmp2;
+        tmp1->next = new_cell;
     }
+
+positionning:
+/* set the offset value */
+    insert_head_pos(&(*w)->value->positions,offset);
 }
 
-List last_cell_word(List w){
-    while(w!=NULL && w->next!=NULL)
-        w=w->next;
-    return w;
-}
+/* List last_cell_word(List w){ */
+/*     while(w!=NULL && w->next!=NULL) */
+/*         w=w->next; */
+/*     return w; */
+/* } */
 
 List search_word(List w,char* word){
     if(w==NULL)
         return NULL;
-    for(;w!=NULL;w=w->next)
-        if(strcmp(w->value->word,word)==0)
+    for(; w!=NULL; w=w->next)
+        if(strcmp(w->value->word, word) == 0)
             return w;
     return NULL;
 }

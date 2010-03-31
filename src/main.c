@@ -4,13 +4,13 @@
 #include "../include/word.h"
 
 int main(int argc, char* argv[]){
-	List *hash=init_hash_table();
-	if(!parse_text(argv[1],hash)){
-		free_hash(hash);
-		return 2;
-	}
-	free_hash(hash);
-	/* check result with valgrind =) */
-	return 0;
+    List w=NULL;
+
+    insert_lexico_word(&w,"truc",0);
+    insert_lexico_word(&w,"amio",3434);
+    insert_lexico_word(&w,"bobo",234);
+    insert_lexico_word(&w,"amio",3435);
+    print_list_word(w);
+    return 0;
 }
 
