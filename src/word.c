@@ -99,6 +99,12 @@ List alloc_cell_word(char* word){
 /*     return 1; */
 /* } */
 
+/*
+	  Inserts a word into the list *w respecting the lexicographical order
+	  and adds it position contained in offset.
+	  This function cannot duplicate word : if the word is already in, it
+	  just adds the word position.
+*/
 void insert_lexico_word(List *w, char* word, long offset){
     List new_cell, tmp1, tmp2;
     int result;
@@ -115,17 +121,15 @@ void insert_lexico_word(List *w, char* word, long offset){
 /* search word's position */
         tmp1=tmp2=*w;
         while(tmp2 != NULL && (result=strcmp(tmp2->value->word, word))<0){
-	    if(!result)/* already in list */
-		goto positionning;
-
-            tmp1 = tmp2;
-            tmp2 = tmp2->next;
+	        tmp1 = tmp2;
+	        tmp2 = tmp2->next;
         }
-        new_cell->next = tmp2;
-        tmp1->next = new_cell;
+        /* if the word is not already in list */
+        if(result!=0){
+		    new_cell->next = tmp2;
+		    tmp1->next = new_cell;
+        }
     }
-
-positionning:
 /* set the offset value */
     insert_head_pos(&(*w)->value->positions,offset);
 }
