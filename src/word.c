@@ -79,8 +79,12 @@ void lower_string(char *string){
 void insert_lexico_word(List *w, char* word, long offset,char case_sensitivity){
     List new_cell, tmp1, tmp2;
     int result;
-    
-    new_cell=alloc_cell_word(tolower(word));
+
+    if(case_sensitivity)/* be case sensitive */
+	new_cell=alloc_cell_word(word);
+    else
+	new_cell=alloc_cell_word(lower_string(word));
+
     /*if the list *w is empty*/
     if(*w==NULL)
         *w = new_cell;

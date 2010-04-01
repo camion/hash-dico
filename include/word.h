@@ -21,7 +21,7 @@ typedef struct cell{
 List alloc_cell_word(char* word);
 void insert_head_word(List *w, char* word);
 void insert_tail_word(List *w, char* word);
-void insert_lexico_word(List *w, char* word, long offset);
+void insert_lexico_word(List *w, char* word, long offset,char case_sensitivity);
 List last_cell_word(List w);
 List search_word(List w,char* word);
 void print_list_word(List w);
