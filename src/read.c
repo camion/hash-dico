@@ -67,14 +67,14 @@ int parse_text(char* file_name, List *hash){
             break;
         if(word[0]=='\0')
             continue;
-        key=hash_string(word)%HASH_TABLE;
+        key=hash_string(word)%HASH_SIZE;
 	insert_lexico_word(&(hash[key]), word, offset);
     }
     fclose(text);
     return 1;
 }
 
-BOOL word_is_in_text(List *hash, char *word){
-    return ((search_word(hash[hash_string(word)%HASH_TABLE],word)!=NULL)?TRUE:FALSE);
+int word_is_in_text(List *hash, char *word){
+    return ((search_word(hash[hash_string(word)%HASH_SIZE],word)!=NULL)?TRUE:FALSE);
 }
 

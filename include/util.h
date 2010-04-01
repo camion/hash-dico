@@ -1,7 +1,7 @@
 #ifndef _UTIL_
 #define _UTIL_
 
-#define HASH_SIZE 1024
+#define HASH_SIZE 1
 #include <stdio.h>
 #include "../include/word.h"
 

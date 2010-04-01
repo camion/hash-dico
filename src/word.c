@@ -1,6 +1,7 @@
 #include "../include/word.h"
 #include "../include/list.h"
-
+#include <string.h>
+#include <ctype.h>
 
 
 /*
@@ -36,6 +37,12 @@ List alloc_cell_word(char* word){
     return new_cell;
 }
 
+void lower_string(char *string){
+    int i;
+    for(i=0;string[i]!='\0';++i)
+        tolower(string[i]);
+}
+
 /*
   Insert a word at the head of the list
 */
@@ -62,42 +69,6 @@ List alloc_cell_word(char* word){
 /*     } */
 /* } */
 
-/*
-  Inserts a word into the list *w respecting the lexicographical order
-*/
-/* int insert_lexico_word(List *w, char* word){ */
-/*     List new_cell; */
-/*     List tmp1,tmp2; */
-
-/*     new_cell=alloc_cell_word(word); */
-/* /\*if the list is empty*\/ */
-/*     if(*w==NULL) */
-/*         *w=new_cell; */
-/*     else{ */
-/*         if((*w)->next==NULL){ */
-/*             if(strcmp(word,(*w)->value->word)<=0){ */
-/*                 new_cell->next=*w; */
-/*                 *w=new_cell; */
-/*             } */
-/*             else */
-/*                 (*w)->next=new_cell; */
-/*             return 1; */
-/*         } */
-/*         if(strcmp(word,(*w)->value->word)<=0){ */
-/*             new_cell->next=*w; */
-/*             *w=new_cell; */
-/*             return 1; */
-/*         } */
-/*         tmp1=tmp2=*w; */
-/*         while(tmp2!=NULL && strcmp(tmp2->value->word,word)<=0){ */
-/*             tmp1=tmp2; */
-/*             tmp2=tmp2->next; */
-/*         } */
-/*         new_cell->next=tmp2; */
-/*         tmp1->next=new_cell; */
-/*     } */
-/*     return 1; */
-/* } */
 
 /*
 	  Inserts a word into the list *w respecting the lexicographical order
@@ -105,20 +76,20 @@ List alloc_cell_word(char* word){
 	  This function cannot duplicate word : if the word is already in, it
 	  just adds the word position.
 */
-void insert_lexico_word(List *w, char* word, long offset){
+void insert_lexico_word(List *w, char* word, long offset,char case_sensitivity){
     List new_cell, tmp1, tmp2;
     int result;
-
-    new_cell=alloc_cell_word(word);
-/*if the list *w is empty*/
+    
+    new_cell=alloc_cell_word(tolower(word));
+    /*if the list *w is empty*/
     if(*w==NULL)
         *w = new_cell;
     else if(strcmp(word, (*w)->value->word)<0){
-/*if the word is < head*/
+    /*if the word is < head*/
         new_cell->next = *w;
         *w = new_cell;
     }else{
-/* search word's position */
+    /* search word's position */
         tmp1=tmp2=*w;
         while(tmp2 != NULL && (result=strcmp(tmp2->value->word, word))<0){
 	        tmp1 = tmp2;
@@ -130,7 +101,7 @@ void insert_lexico_word(List *w, char* word, long offset){
 		    tmp1->next = new_cell;
         }
     }
-/* set the offset value */
+    /* set the offset value */
     insert_head_pos(&(*w)->value->positions,offset);
 }
 

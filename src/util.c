@@ -14,7 +14,7 @@ unsigned int hash_string(char *p){
 }
 
 List* init_hash_table(){
-	List* hash=(List*)calloc(HASH_TABLE,sizeof(Cell));
+	List* hash=(List*)calloc(HASH_SIZE,sizeof(Cell));
 	if(hash==NULL){
 		fprintf(stderr,"Error while allocating hash table\n");
 		exit(1);
@@ -24,7 +24,7 @@ List* init_hash_table(){
 
 void free_hash(List *hash){
 	int i;
-	for(i=0;i<HASH_TABLE;i++){
+	for(i=0;i<HASH_SIZE;i++){
 		free_list_word(&hash[i]);
 	}
 	free(hash);

@@ -1,7 +1,7 @@
 CC=gcc
 CFLAGS=-Wall -ansi -g
 
-EXEC=Index
+EXEC=main
 SRC=$(wildcard src/*.c)
 OBJ=$(SRC:.c=.o)
 
