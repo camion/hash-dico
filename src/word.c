@@ -14,35 +14,35 @@ List alloc_cell_word(char* word){
     List new_cell;
     int size;
     /* Allocates the box of the cell (Cellword + List) */
-    if((new_cell=malloc(sizeof(Cell)))==NULL){
+    if((new_cell = malloc(sizeof(Cell))) == NULL){
         fprintf(stderr,"Error while allocating a cell\n");
         exit(2);
     }
     /* Allocates the box of the word (string + Listpos)*/
-    if((new_cell->value=malloc(sizeof(Cellword)))==NULL){
+    if((new_cell->value = malloc(sizeof(Cellword))) == NULL){
         fprintf(stderr,"Error while allocating a cell\n");
         exit(2);
     }
     size=strlen(word);
     /* Allocates the string */
-    if((new_cell->value->word=malloc(size*sizeof(char)+1))==NULL){
+    if((new_cell->value->word = malloc(size*sizeof(char)+1)) == NULL){
         fprintf(stderr,"Error while allocating a word\n");
         exit(2);
     }
     /* The list of its position is void */
-    new_cell->value->positions=NULL;
+    new_cell->value->positions = NULL;
     /* Copy the word into the new cell.
        We can use strcpy in place of strncpy because we have allocated exactly
        the place needed.. so */
-    strcpy(new_cell->value->word,word);
-    new_cell->next=NULL;
+    strcpy(new_cell->value->word, word);
+    new_cell->next = NULL;
     return new_cell;
 }
 
 void lower_string(char *string){
     int i;
     for(i=0; string[i]!='\0'; ++i)
-        string[i] = tolower(string[i]);
+        string[i]=tolower(string[i]);
 }
 
 /*
@@ -89,15 +89,15 @@ void insert_lexico_word(List *w, char* word, long offset,char case_sensitivity){
     new_cell=alloc_cell_word(word);
     /*if the list *w is empty*/
     if(*w==NULL)
-        *w = new_cell;
+        *w=new_cell;
     else if(strcmp(word, (*w)->value->word)<0){
         /*if the word is < head*/
         new_cell->next = *w;
-        *w = new_cell;
+        *w=new_cell;
     }else{
         /* search word's position */
         tmp1=tmp2=*w;
-        while(tmp2 != NULL && (result=strcmp(tmp2->value->word, word))<0){
+        while(tmp2!=NULL && (result=strcmp(tmp2->value->word, word))<0){
             tmp1 = tmp2;
             tmp2 = tmp2->next;
         }
@@ -108,7 +108,7 @@ void insert_lexico_word(List *w, char* word, long offset,char case_sensitivity){
         }
     }
     /* set the offset value */
-    insert_head_pos(&(*w)->value->positions,offset);
+    insert_head_pos(&(*w)->value->positions, offset);
 }
 
 /* List last_cell_word(List w){ */
@@ -117,7 +117,7 @@ void insert_lexico_word(List *w, char* word, long offset,char case_sensitivity){
 /*     return w; */
 /* } */
 
-List search_word(List w,char* word){
+List search_word(List w, char* word){
     if(w==NULL)
         return NULL;
     for(; w!=NULL; w=w->next)
@@ -131,7 +131,7 @@ void print_list_word(List w){
         printf("Empty List of words\n");
         return;
     }
-    for(;w!=NULL;w=w->next)
+    for(; w!=NULL; w=w->next)
         printf("%p [ %s -> %p ]\n",w,w->value->word,w->next);
 
 }
