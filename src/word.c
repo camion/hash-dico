@@ -32,8 +32,8 @@ List alloc_cell_word(char* word){
     /* The list of its position is void */
     new_cell->value->positions=NULL;
     /* Copy the word into the new cell.
-We can use strcpy in place of strncpy because we have allocated exactly
-the place needed.. so */
+       We can use strcpy in place of strncpy because we have allocated exactly
+       the place needed.. so */
     strcpy(new_cell->value->word,word);
     new_cell->next=NULL;
     return new_cell;
@@ -41,8 +41,8 @@ the place needed.. so */
 
 void lower_string(char *string){
     int i;
-    for(i=0;string[i]!='\0';++i)
-        tolower(string[i]);
+    for(i=0; string[i]!='\0'; ++i)
+        string[i] = tolower(string[i]);
 }
 
 /*
@@ -73,38 +73,38 @@ void lower_string(char *string){
 
 
 /*
-	  Inserts a word into the list *w respecting the lexicographical order
-	  and adds it position contained in offset.
-	  This function cannot duplicate word : if the word is already in, it
-	  just adds the word position.
+  Inserts a word into the list *w respecting the lexicographical order
+  and adds it position contained in offset.
+  This function cannot duplicate word : if the word is already in, it
+  just adds the word position.
 */
 void insert_lexico_word(List *w, char* word, long offset,char case_sensitivity){
     List new_cell, tmp1, tmp2;
     int result;
 
-    if(case_sensitivity)/* be case sensitive */
-	new_cell=alloc_cell_word(word);
-    else
-	new_cell=alloc_cell_word(lower_string(word));
+/* if DO NOT be case sensitive */
+    if(!case_sensitivity)
+	lower_string(word);
 
+    new_cell=alloc_cell_word(word);
     /*if the list *w is empty*/
     if(*w==NULL)
         *w = new_cell;
     else if(strcmp(word, (*w)->value->word)<0){
-    /*if the word is < head*/
+        /*if the word is < head*/
         new_cell->next = *w;
         *w = new_cell;
     }else{
-    /* search word's position */
+        /* search word's position */
         tmp1=tmp2=*w;
         while(tmp2 != NULL && (result=strcmp(tmp2->value->word, word))<0){
-	        tmp1 = tmp2;
-	        tmp2 = tmp2->next;
+            tmp1 = tmp2;
+            tmp2 = tmp2->next;
         }
         /* if the word is not already in list */
         if(result!=0){
-		    new_cell->next = tmp2;
-		    tmp1->next = new_cell;
+            new_cell->next = tmp2;
+            tmp1->next = new_cell;
         }
     }
     /* set the offset value */

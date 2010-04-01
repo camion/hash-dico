@@ -68,7 +68,7 @@ int parse_text(char* file_name, List *hash){
         if(word[0]=='\0')
             continue;
         key=hash_string(word)%HASH_SIZE;
-	insert_lexico_word(&(hash[key]), word, offset);
+	insert_lexico_word(&(hash[key]), word, offset, 1);
     }
     fclose(text);
     return 1;
