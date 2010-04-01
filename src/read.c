@@ -46,7 +46,7 @@ int get_word(FILE* stream, char* dest, size_t n){
   Analyses all the text and indexes each word
   Fills the hash table with lists of words
 */
-int parse_text(char* file_name, List *hash){
+int parse_text(char* file_name, List *hash_table){
 
     FILE* text;
     char word[WORD_BUFFER];
@@ -68,7 +68,7 @@ int parse_text(char* file_name, List *hash){
         if(word[0]=='\0')
             continue;
         key=hash_string(word)%HASH_SIZE;
-	insert_lexico_word(&(hash[key]), word, offset, 1);
+	insert_lexico_word(&(hash_table[key]), word, offset, 1);
     }
     fclose(text);
     return 1;
