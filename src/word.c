@@ -31,8 +31,10 @@ List alloc_cell_word(char* word){
     }
     /* The list of its position is void */
     new_cell->value->positions=NULL;
-    /* Copy the word into the new cell. We can use strcpy in place of strncpy because we have allocated exactly the place needed*/
-    strncpy(new_cell->value->word,word,size+1);
+    /* Copy the word into the new cell.
+We can use strcpy in place of strncpy because we have allocated exactly
+the place needed.. so */
+    strcpy(new_cell->value->word,word);
     new_cell->next=NULL;
     return new_cell;
 }
