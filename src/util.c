@@ -30,3 +30,9 @@ void free_hash(List *hash){
 	free(hash);
 }
 
+int column_count(){
+/* return the number of columns in current term */
+    struct winsize ws;
+    ioctl(1, TIOCGWINSZ, &ws);
+    return ws.ws_col;
+}

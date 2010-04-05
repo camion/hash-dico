@@ -3,6 +3,8 @@
 
 #define HASH_SIZE 1
 #include <stdio.h>
+#include <sys/types.h>/*winsize*/
+#include <sys/ioctl.h>
 #include "../include/word.h"
 
 unsigned int hash_string(char *p);
