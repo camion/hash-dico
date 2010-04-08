@@ -1,7 +1,8 @@
 #ifndef _UTIL_
 #define _UTIL_
 
-#define HASH_SIZE 1
+/* We use a big hash size, to make hash function sprinkle better data in hash */
+#define HASH_SIZE 2053
 #include <stdio.h>
 #include <sys/types.h>/*winsize*/
 #include <sys/ioctl.h>
