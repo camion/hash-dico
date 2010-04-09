@@ -14,24 +14,17 @@ void quit(){
 
 int main(int argc, char* argv[]){
 
-
-/* execute quit() on ctrl-c */
+/* execute quit() on SIGINT (ctrl-c) */
     signal(SIGINT,quit);
 /* check if root execute the program */
     if(getgid() == 0)fprintf(stderr,"You shouldn't run %s as root.\n",argv[0]);
 
     List *hash_table=init_hash_table();
     FILE* text=fopen("test","r");
-    int r;
-    char s[WORD_BUFFER];
-    r=get_word(text,s,WORD_BUFFER);
-    r=get_word(text,s,WORD_BUFFER);
-    r=get_word(text,s,WORD_BUFFER);
-    r=get_word(text,s,WORD_BUFFER);
-    r=get_word(text,s,WORD_BUFFER);
-    r=get_word(text,s,WORD_BUFFER);
-    r=get_word(text,s,WORD_BUFFER);
-    printf("r:%d s:%s\n",r,s);
+    parse_text(text, hash_table);
+    print_list_pos(search_word(hash_table,"regrets")->value->positions);
+
+    free_hash(hash_table);
     return 0;
 }
 
