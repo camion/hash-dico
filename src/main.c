@@ -18,11 +18,11 @@ int main(int argc, char* argv[]){
     signal(SIGINT,quit);
 /* check if root execute the program */
     if(getgid() == 0)fprintf(stderr,"You shouldn't run %s as root.\n",argv[0]);
-
+    
     List *hash_table=init_hash_table();
     FILE* text=fopen("Colomba.txt","r");
     parse_text(text, hash_table);
-    print_list_pos(search_word(hash_table,"regrets")->value->positions);
+    print_sentences_containing(text,hash_table,"les");
 
     free_hash(hash_table);
     return 0;
