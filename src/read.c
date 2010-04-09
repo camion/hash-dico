@@ -1,5 +1,5 @@
 #include "../include/read.h"
-
+#include <ctype.h>
 
 /*
   Extract a word from a stream already opened
@@ -26,7 +26,7 @@ int get_word(FILE* stream, char* dest, size_t n){
             }
         }
         else{
-            word[index]=c;
+            word[index]=tolower(c);
             index++;
         }
     }
@@ -68,13 +68,9 @@ int parse_text(char* file_name, List *hash_table){
         if(word[0]=='\0')
             continue;
         key=hash_string(word)%HASH_SIZE;
-	insert_lexico_word(&(hash_table[key]), word, offset, 1);
+	insert_lexico_word(&(hash_table[key]), word, offset);
     }
     fclose(text);
     return 1;
-}
-
-int word_is_in_text(List *hash, char *word){
-    return ((search_word(hash[hash_string(word)%HASH_SIZE],word)!=NULL)?TRUE:FALSE);
 }
 

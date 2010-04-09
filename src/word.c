@@ -1,7 +1,9 @@
 #include "../include/word.h"
 #include "../include/list.h"
+#include "../include/util.h"
+
 #include <string.h>
-#include <ctype.h>
+
 
 
 /*
@@ -39,11 +41,11 @@ List alloc_cell_word(char* word){
     return new_cell;
 }
 
-void lower_string(char *string){
-    int i;
-    for(i=0; string[i]!='\0'; ++i)
-        string[i]=tolower(string[i]);
-}
+/* void lower_string(char *string){ */
+/*     int i; */
+/*     for(i=0; string[i]!='\0'; ++i) */
+/*         string[i]=tolower(string[i]); */
+/* } */
 
 /*
   Insert a word at the head of the list
@@ -78,13 +80,10 @@ void lower_string(char *string){
   This function cannot duplicate word : if the word is already in, it
   just adds the word position.
 */
-void insert_lexico_word(List *w, char* word, long offset,char case_sensitivity){
+void insert_lexico_word(List *w, char* word, long offset){
     List new_cell, tmp1, tmp2;
     int result;
 
-/* if DO NOT be case sensitive */
-    if(case_sensitivity==0)
-	    lower_string(word);
 
     new_cell=alloc_cell_word(word);
     /*if the list *w is empty*/
@@ -117,13 +116,14 @@ void insert_lexico_word(List *w, char* word, long offset,char case_sensitivity){
 /*     return w; */
 /* } */
 
-List search_word(List w, char* word){
-    if(w==NULL)
-        return NULL;
-    for(; w!=NULL; w=w->next)
-        if(strcmp(w->value->word, word) == 0)
-            return w;
+List search_word(List hash[], char* word){
+List w =  hash[hash_string(word)%HASH_SIZE];
+if(w==NULL)
     return NULL;
+for(; w!=NULL; w=w->next)
+    if(strcmp(w->value->word, word) == 0)
+	return w;
+return NULL;
 }
 
 void print_list_word(List w){
