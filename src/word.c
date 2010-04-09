@@ -1,4 +1,5 @@
 #include "../include/word.h"
+#include "../include/read.h"
 #include "../include/list.h"
 #include "../include/util.h"
 
@@ -83,16 +84,16 @@ List alloc_cell_word(char* word){
 void insert_lexico_word(List *w, char* word, long offset){
     List new_cell, tmp1, tmp2;
     int result;
-
-
     new_cell=alloc_cell_word(word);
-    /*if the list *w is empty*/
+    /* if the list *w is empty */
     if(*w==NULL)
         *w=new_cell;
+    /* if the word must be inserted before the head of the list */
     else if(strcmp(word, (*w)->value->word)<0){
-        /*if the word is < head*/
+        /* if the word is < head */
         new_cell->next = *w;
         *w=new_cell;
+    /* if the word must be inserted after the head of the list */
     }else{
         /* search word's position */
         tmp1=tmp2=*w;
@@ -106,8 +107,8 @@ void insert_lexico_word(List *w, char* word, long offset){
             tmp1->next = new_cell;
         }
     }
-    /* set the offset value */
-    insert_head_pos(&(*w)->value->positions, offset);
+    /* set the offset value only if not already in */
+    insert_head_pos(&(new_cell->value->positions), offset);
 }
 
 /* List last_cell_word(List w){ */
@@ -117,13 +118,11 @@ void insert_lexico_word(List *w, char* word, long offset){
 /* } */
 
 List search_word(List hash[], char* word){
-List w =  hash[hash_string(word)%HASH_SIZE];
-if(w==NULL)
+    List w =  hash[hash_string(word)%HASH_SIZE];
+    for(; w!=NULL; w=w->next)
+        if(strcmp(w->value->word, word) == 0)
+	        return w;
     return NULL;
-for(; w!=NULL; w=w->next)
-    if(strcmp(w->value->word, word) == 0)
-	return w;
-return NULL;
 }
 
 void print_list_word(List w){
@@ -147,5 +146,33 @@ void free_list_word(List *w){
         *w=tmp;
     }
     *w=NULL;
+}
+
+void print_sentences_containing(FILE* stream, List hash[], char *word){
+    List w =  hash[hash_string(word)%HASH_SIZE];
+    Listpos tmp;
+    int i;
+    char c;
+    /* Search word in list */
+    for(i=0; w!=NULL; w=w->next,i++){
+        if(strcmp(w->value->word, word) == 0){
+	        tmp=w->value->positions;
+	        break;
+	    }
+	}
+	printf("\t%s apparaît dans %d phrases du texte :\n\n",word,i);
+	/* print every sentences */
+    for(i=1;tmp!=NULL;tmp=tmp->next,i++){
+        /* we set stream position at the begining of the sentence*/
+        fseek(stream,tmp->position,SEEK_SET);
+        printf("DBG:%ld:DBG\n",tmp->position);
+        printf("\t> #%d ",i);
+        while((c=fgetc(stream)) && c!=EOF){
+            printf("%c",c);
+            if(END_OF_PHRASE(c))
+                break;
+        }
+        printf("\n");
+    }
 }
 

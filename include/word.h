@@ -24,6 +24,7 @@ void insert_tail_word(List *w, char* word);
 void insert_lexico_word(List *w, char* word, long offset);
 List last_cell_word(List w);
 List search_word(List hash[],char* word);
+void print_sentences_containing(FILE* stream, List hash[], char *word);
 void print_list_word(List w);
 void free_list_word(List *w);
 

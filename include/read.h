@@ -12,6 +12,6 @@
 #include "../include/util.h"
 
 int get_word(FILE* stream, char* dest, size_t n);
-int parse_text(char* file_name, List *hash);
+void parse_text(FILE* text, List *hash);
 
 #endif

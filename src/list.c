@@ -55,7 +55,7 @@ void print_list_pos(Listpos l){
 	if(l==NULL)
 		printf("Empty list of positions\n");
 	for(;l!=NULL;l=l->next)
-		printf("%p [ %4d -> %p ]\n",l,l->position,l->next);
+		printf("%p [ %4ld -> %p ]\n",l,l->position,l->next);
 }
 
 void free_list_pos(Listpos *l){

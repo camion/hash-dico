@@ -5,7 +5,7 @@
 
 /* List of positions */
 typedef struct cellpos{
-	int position;
+	long position;
 	struct cellpos* next;
 }Cellpos,*Listpos;
 
