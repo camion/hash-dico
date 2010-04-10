@@ -61,7 +61,7 @@ void usage(FILE *stream){
     for(i=0; i<columns; ++i)fprintf(stream,"-");
 }
 
-int progress_bar(long position, long size){
+int hash_progress_bar(long position, long size){
     char* begin = "Hashing [";
     char* end = "] ";
     int columns = column_count();
