@@ -20,7 +20,7 @@ List alloc_cell_word(char* word);
 void insert_head_word(List *w, char* word);
 void insert_tail_word(List *w, char* word);
 void insert_lexico_word(List *w, char* word, long offset);
-void merge_list(List w1, List w2);
+void merge_list(List *w1, const List w2);
 List create_sorted_list(List hash[]);
 List last_cell_word(List w);
 List search_word(List hash[],char* word);

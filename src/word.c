@@ -115,9 +115,40 @@ void print_list_word(List w){
 /*
     Merges two list respecting lexical order
     The merged list is stored in w1
+    w2 stay intact
 */
-void merge_list(List w1, List w2){
-    ;
+void merge_list(List *w1, const List w2){
+    List new_cell;
+    List tmp1, tmp2, tmp3;
+    /* We cannot merge with a void list */
+    if(w2==NULL)
+        return;
+    /* for every element of w2 */
+    for(tmp3=w2;tmp3!=NULL;tmp3=tmp3->next){
+        new_cell=(List)malloc(sizeof(List));
+        new_cell->value=tmp3->value;
+        new_cell->next=NULL;
+        /* if the list *w is empty */
+        if(*w1==NULL)
+            *w1=new_cell;
+        /* if the word must be inserted before the head of the list */
+        else if(strcmp(tmp3->value->word, (*w1)->value->word)<0){
+            /* if the word is < head */
+            new_cell->next = *w1;
+            *w1=new_cell;
+        }
+        /* if the word must be inserted after the head of the list */
+        else{
+            /* search word's position */
+            tmp1=tmp2=*w1;
+            while(tmp2!=NULL && strcmp(tmp2->value->word, tmp3->value->word)<0){
+                tmp1 = tmp2;
+                tmp2 = tmp2->next;
+            }
+            new_cell->next = tmp2;
+            tmp1->next = new_cell;
+        }
+    }
 }
 
 
@@ -129,9 +160,9 @@ void merge_list(List w1, List w2){
 List create_sorted_list(List hash[]){
     int i;
     /* We merge all lists with the first */
-    List w = hash[0];
-    for(i=1;i<HASH_SIZE;i++)
-        merge_list(w,hash[i]);
+    List w = NULL;
+    for(i=0;i<HASH_SIZE;i++)
+        merge_list(&w,hash[i]);
     return w;
 }
 
