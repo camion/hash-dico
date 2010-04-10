@@ -10,12 +10,12 @@
 #include "../include/util.h"
 #include "../include/word.h"
 
+int verbose=0;
+
 void quit(){
     printf("\nctrl-c caught, exiting...\n");
     exit(1);
 }
-
-int verbose=0;
 
 int main(int argc, char* argv[]){
     const char* optstring=":a:p:P:ld:D:h";

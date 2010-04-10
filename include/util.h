@@ -5,6 +5,7 @@
 #define HASH_SIZE 2053
 #include "../include/word.h"
 
+extern int verbose;
 
 unsigned int hash_string(char *p);
 List* init_hash_table();
@@ -13,4 +14,5 @@ int column_count();
 void usage(FILE *stream);
 int progress_bar(long position, long size);
 long filesize(FILE* f);
+
 #endif
