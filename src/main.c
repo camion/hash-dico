@@ -15,6 +15,7 @@ void quit(){
     exit(1);
 }
 
+int verbose=0;
 
 int main(int argc, char* argv[]){
     const char* optstring=":a:p:P:ld:D:h";
@@ -34,7 +35,8 @@ int main(int argc, char* argv[]){
 	case 'l': printf("Print words of text sorted list.\n"); break;
 	case 'd': printf("Print words begining with \"%s*\" in the text.\n",optarg); break;
 	case 'D': printf("Save sorted list in %s.DICO\n",optarg); break;
-	case 'h': usage(stdout); return 0;;
+	case 'v': verbose=1; break;
+	case 'h': usage(stdout); return 0;
 	case ':': printf("arg missing for option %c\n",optopt); usage(stderr); return 1;
 	case '?': printf("unknown option %c\n",optopt); usage(stderr); return 1;
 	}

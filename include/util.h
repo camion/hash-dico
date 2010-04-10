@@ -5,6 +5,7 @@
 #define HASH_SIZE 2053
 #include "../include/word.h"
 
+
 unsigned int hash_string(char *p);
 List* init_hash_table();
 void free_hash(List *hash);
