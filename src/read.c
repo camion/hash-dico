@@ -58,15 +58,15 @@ void parse_text(FILE* text, List *hash_table){
 
     file_size = filesize(text);
     offset=ftell(text);
-    while(result!=EOF){
+    for(;;){
         if(result==2){/* end of sentence */
             offset=ftell(text);
 	    if(offset%10 == 1)/* just sometimes */
 		progress_bar(offset, file_size);
 	}
         result=get_word(text,word,WORD_BUFFER);
-        /* if(result==EOF) */
-        /*     break; */
+        if(result==EOF)/*for the last word*/
+            break;
         if(word[0]=='\0')
             continue;
         key=hash_string(word)%HASH_SIZE;
