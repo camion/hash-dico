@@ -16,11 +16,15 @@ void quit(){
 }
 
 void usage(FILE *stream){
-    fprintf(stream,"SYNOPSIS:\nIndex [option] file\n");
-    fprintf(stream,"or\nIndex\n");
-    fprintf(stream,"Examples:\n");
-    fprintf(stream,"\n");
-
+    int columns=column_count(), i;
+    for(i=0; i<columns; ++i)fprintf(stream,"-");
+    fprintf(stream,"\nSYNOPSIS:\nIndex [option] file\n");
+    fprintf(stream,"\tor\nIndex\n");
+    for(i=0; i<columns; ++i)fprintf(stream,"-");
+    fprintf(stream,"\nExamples:\n");
+    fprintf(stream,"Index -a word file\t| Check if word is in file.\n");
+    fprintf(stream,"Index -p word file\t| Print word positions in file.\n");
+    fprintf(stream,"Index -P word file\t| Print santances containing word in file.\n");
 }
 
 int main(int argc, char* argv[]){
@@ -38,7 +42,7 @@ int main(int argc, char* argv[]){
 	case 'a': printf("Check if \"%s\" is in the text.\n",optarg); break;
 	case 'p': printf("Print \"%s\" positions in the text.\n",optarg); break;
 	case 'P': printf("Print santances of the text containing \"%s\".\n",optarg); break;
-	case 'l': printf("Print words of text sorted list.\n"); break
+	case 'l': printf("Print words of text sorted list.\n"); break;
 	case 'd': printf("Print words begining with \"%s*\" in the text.\n",optarg); break;
 	case 'D': printf("Save sorted list in %s.DICO\n",optarg); break;
 	case 'h': usage(stdout); return 0;;
