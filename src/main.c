@@ -16,28 +16,32 @@ void quit(){
 }
 
 void usage(FILE *stream){
-    fprintf(stream,"USAGE screen\n");
-    fprintf(stream,"SYNOPSIS:\n Index [option] file\n");
+    fprintf(stream,"SYNOPSIS:\nIndex [option] file\n");
+    fprintf(stream,"or\nIndex\n");
+    fprintf(stream,"Examples:\n");
+    fprintf(stream,"\n");
+
 }
 
 int main(int argc, char* argv[]){
-    const char* optstring=":ha:ld:D:";
+    const char* optstring=":a:p:P:ld:D:h";
     int option;
 
-/* execute quit() on SIGINT (ctrl-c) */
+    /* execute quit() on SIGINT (ctrl-c) */
     signal(SIGINT,quit);
-/* check if root execute the program */
+    /* check if root execute the program */
     if(getgid() == 0)fprintf(stderr,"You shouldn't run %s as root.\n",argv[0]);
 
-
+    /* getopt stuff */
     while (EOF!=(option=getopt(argc,argv,optstring))) {
 	switch (option) {
-	case 'h': usage(stdout); return 0;
-	case 'l': printf("liste triee\n"); break;
-	case 'a': printf("mot %s\n",optarg); break;
-	case 'd': printf("mot comme prefix: %s\n",optarg); break;
+	case 'a': printf("Check if \"%s\" is in the text.\n",optarg); break;
+	case 'p': printf("Print \"%s\" positions in the text.\n",optarg); break;
+	case 'P': printf("Print santances of the text containing \"%s\".\n",optarg); break;
+	case 'l': printf("Print words of text sorted list.\n"); break
+	case 'd': printf("Print words begining with \"%s*\" in the text.\n",optarg); break;
 	case 'D': printf("Save sorted list in %s.DICO\n",optarg); break;
-	case 'i': printf("input %s\n",optarg); break;
+	case 'h': usage(stdout); return 0;;
 	case ':': printf("arg missing for option %c\n",optopt); usage(stderr); return 1;
 	case '?': printf("unknown option %c\n",optopt); break;
 	}
@@ -50,7 +54,7 @@ int main(int argc, char* argv[]){
     FILE* text=fopen("Colomba.txt","r");
     parse_text(text, hash_table);
 
-    print_sentences_containing(text,hash_table,"regrets");
+    print_sentences_containing(text,hash_table,"femme");
     fclose(text);
     free_hash(hash_table);
     return 0;
