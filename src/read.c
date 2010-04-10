@@ -56,11 +56,7 @@ void parse_text(FILE* text, List *hash_table){
     long file_size;
     int key;
 
-    /* get the file size */
-    fseek(text, 0, SEEK_END);
-    file_size = ftell(text);
-    rewind(text);
-
+    file_size = filesize(text);
     offset=ftell(text);
     while(result!=EOF){
         if(result==2){/* end of sentence */
@@ -76,7 +72,7 @@ void parse_text(FILE* text, List *hash_table){
         key=hash_string(word)%HASH_SIZE;
     	insert_lexico_word(&(hash_table[key]), word, offset);
     }
-    progress_bar(1, 1);
+    progress_bar(1, 1);/* be sure to stay with 100% */
     printf("\n");
 }
 

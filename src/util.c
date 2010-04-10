@@ -82,3 +82,13 @@ void progress_bar(long position, long size){
 
     fflush(stdout);
 }
+
+long filesize(FILE* f) {
+   long old_pos=ftell(f);
+   long size;
+
+   fseek(f,0,SEEK_END);
+   size=1+ftell(f);
+   fseek(f,old_pos,SEEK_SET);
+   return size;
+}
