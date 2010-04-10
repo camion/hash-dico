@@ -63,7 +63,7 @@ void parse_text(FILE* text, List *hash_table){
         if(result==2){/* end of sentence */
             offset=ftell(text);
 	    if(verbose && (offset* 100)/file_size > last_percent)/* just sometimes */
-		last_percent = progress_bar(offset, file_size);
+		last_percent = hash_progress_bar(offset, file_size);
 	}
         result=get_word(text,word,WORD_BUFFER);
         if(result==EOF)/*exit for the last word*/
