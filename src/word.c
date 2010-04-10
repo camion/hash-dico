@@ -59,17 +59,20 @@ List alloc_cell_word(char* word){
 void insert_lexico_word(List *w, char* word, long offset){
     List new_cell, tmp1, tmp2;
     int result;
-    new_cell=alloc_cell_word(word);
-    insert_head_pos(&(new_cell->value->positions), offset);
 
     /* if the list *w is empty */
-    if(*w==NULL)
+    if(*w==NULL){
+        new_cell=alloc_cell_word(word);
         *w=new_cell;
+        insert_head_pos(&(new_cell->value->positions), offset);
+    }
     /* if the word must be inserted before the head of the list */
     else if(strcmp(word, (*w)->value->word)<0){
         /* if the word is < head */
+        new_cell=alloc_cell_word(word);
         new_cell->next = *w;
         *w=new_cell;
+        insert_head_pos(&(new_cell->value->positions), offset);
     /* if the word must be inserted after the head of the list */
     }else{
         /* search word's position */
@@ -80,6 +83,7 @@ void insert_lexico_word(List *w, char* word, long offset){
         }
         /* if the word is not already in list */
         if(result!=0){
+            new_cell=alloc_cell_word(word);
             new_cell->next = tmp2;
             tmp1->next = new_cell;
         }

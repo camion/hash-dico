@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <unistd.h>
+#include <sys/types.h>
 #include <signal.h>
 #include <ctype.h>
 
@@ -25,7 +26,7 @@ int main(int argc, char* argv[]){
     parse_text(text, hash_table);
     
     print_sentences_containing(text,hash_table,"regrets");
-
+    fclose(text);
     free_hash(hash_table);
     return 0;
 }
