@@ -15,17 +15,6 @@ void quit(){
     exit(1);
 }
 
-void usage(FILE *stream){
-    int columns=column_count(), i;
-    for(i=0; i<columns; ++i)fprintf(stream,"-");
-    fprintf(stream,"\nSYNOPSIS:\nIndex [option] file\n");
-    fprintf(stream,"\tor\nIndex\n");
-    for(i=0; i<columns; ++i)fprintf(stream,"-");
-    fprintf(stream,"\nExamples:\n");
-    fprintf(stream,"Index -a word file\t| Check if word is in file.\n");
-    fprintf(stream,"Index -p word file\t| Print word positions in file.\n");
-    fprintf(stream,"Index -P word file\t| Print santances containing word in file.\n");
-}
 
 int main(int argc, char* argv[]){
     const char* optstring=":a:p:P:ld:D:h";
@@ -47,7 +36,7 @@ int main(int argc, char* argv[]){
 	case 'D': printf("Save sorted list in %s.DICO\n",optarg); break;
 	case 'h': usage(stdout); return 0;;
 	case ':': printf("arg missing for option %c\n",optopt); usage(stderr); return 1;
-	case '?': printf("unknown option %c\n",optopt); break;
+	case '?': printf("unknown option %c\n",optopt); usage(stderr); return 1;
 	}
     }
 
@@ -58,7 +47,7 @@ int main(int argc, char* argv[]){
     FILE* text=fopen("Colomba.txt","r");
     parse_text(text, hash_table);
 
-    print_sentences_containing(text,hash_table,"femme");
+    print_sentences_containing(text,hash_table,"la");
     fclose(text);
     free_hash(hash_table);
     return 0;

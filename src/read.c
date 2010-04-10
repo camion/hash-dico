@@ -53,12 +53,20 @@ void parse_text(FILE* text, List *hash_table){
     char word[WORD_BUFFER];
     int result=0;
     long offset;
+    long file_size;
     int key;
+
+    fseek(text, 0, SEEK_END);
+    file_size = ftell(text);
+    rewind(text);
 
     offset=ftell(text);
     while(result!=EOF){
-        if(result==2)
+        if(result==2){/* end of sentence */
             offset=ftell(text);
+	    if(offset%2)
+		progress_bar(offset, file_size);
+	}
         result=get_word(text,word,WORD_BUFFER);
         if(result==EOF)
             break;
