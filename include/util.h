@@ -10,6 +10,6 @@ List* init_hash_table();
 void free_hash(List *hash);
 int column_count();
 void usage(FILE *stream);
-void progress_bar(long position, long size);
+int progress_bar(long position, long size);
 long filesize(FILE* f);
 #endif

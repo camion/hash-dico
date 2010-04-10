@@ -52,17 +52,18 @@ void parse_text(FILE* text, List *hash_table){
 
     char word[WORD_BUFFER];
     int result=0;
+    int key,last_percent=-1;
     long offset;
     long file_size;
-    int key;
+
 
     file_size = filesize(text);
     offset=ftell(text);
     for(;;){
         if(result==2){/* end of sentence */
             offset=ftell(text);
-	    if(offset%10 == 1)/* just sometimes */
-		progress_bar(offset, file_size);
+	    if((offset* 100)/file_size > last_percent)/* just sometimes */
+		last_percent = progress_bar(offset, file_size);
 	}
         result=get_word(text,word,WORD_BUFFER);
         if(result==EOF)/*for the last word*/

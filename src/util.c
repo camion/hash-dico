@@ -61,7 +61,7 @@ void usage(FILE *stream){
     for(i=0; i<columns; ++i)fprintf(stream,"-");
 }
 
-void progress_bar(long position, long size){
+int progress_bar(long position, long size){
     char* begin = "Progress [";
     char* end = "] ";
     int columns = column_count();
@@ -74,13 +74,14 @@ void progress_bar(long position, long size){
     while(fgetc(stdout)!=EOF)
 	fseek(stdout, -1, SEEK_CUR);
 
-    if(columns < used+progress)return;/*not enouth place*/
+    if(columns < used+progress)return 0;/*not enouth place*/
     printf("%s",begin);
     for(i=0; i<progress; ++i, ++used)printf("#");
     for(; used<columns; ++used)printf("-");
     printf("%s%3d%%\r", end, percent);
 
     fflush(stdout);
+    return percent;
 }
 
 long filesize(FILE* f) {
