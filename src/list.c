@@ -1,5 +1,12 @@
+#include <stdio.h>
+#include <stdlib.h>
 #include "../include/list.h"
 
+/*
+    Allocates memory for a position
+    Returns the new cell allocated
+    or NULL if memory error
+ */
 Listpos alloc_cell_pos(int value){
 	Listpos new_cell;
 	if((new_cell=malloc(sizeof(Cellpos)))!=NULL){
@@ -9,48 +16,35 @@ Listpos alloc_cell_pos(int value){
 	return new_cell;
 }
 
-int insert_head_pos(Listpos *l, int value){
+/*
+    Inserts a position(int) at the head of the list 
+    Exit the program if a memory error occures
+*/
+void insert_head_pos(Listpos *l, int value){
 	Listpos new_cell;
 	if((new_cell=alloc_cell_pos(value))==NULL){
 		fprintf(stderr,"Error while allocating a position\n");
-		return 0;
+		exit(2);
 	}
 	new_cell->next=*l;
 	*l=new_cell;
-	return 1;
 }
 
-/* int insert_tail_pos(Listpos *l, int value){ */
-/* 	Listpos new_cell; */
-/* 	Listpos last; */
-/* 	if((new_cell=alloc_cell_pos(value))==NULL){ */
-/* 		fprintf(stderr,"Error while inserting a position\n"); */
-/* 		return 0; */
-/* 	} */
-/* 	if(*l==NULL) */
-/* 		*l=new_cell; */
-/* 	else{ */
-/* 		last=last_cell_pos(*l); */
-/* 		last->next=new_cell; */
-/* 	} */
-/* 	return 1; */
-/* } */
+/*
+    Count and returns number of elements 
+    of a list of positions
+*/
+int count_list_pos(Listpos l){
+    int i=0;
+    for(; l!=NULL; l=l->next)
+	        i++;
+    return i;
+}
 
-/* Listpos last_cell_pos(Listpos l){ */
-/* 	while(l!=NULL && l->next!=NULL) */
-/* 		l=l->next; */
-/* 	return l; */
-/* } */
-
-/* Listpos search_pos(Listpos l, int value){ */
-/* 	if(l==NULL) */
-/* 		return NULL; */
-/* 	for(;l!=NULL;l=l->next) */
-/* 		if(l->position==value) */
-/* 			return l; */
-/* 	return NULL; */
-/* } */
-
+/*
+    Print all elements of list
+    For debug only
+*/
 void print_list_pos(Listpos l){
 	if(l==NULL)
 		printf("Empty list of positions\n");
@@ -58,6 +52,10 @@ void print_list_pos(Listpos l){
 		printf("%p [ %4ld -> %p ]\n",l,l->position,l->next);
 }
 
+/*
+    Free all elements of the list
+    *l=NULL after free
+*/
 void free_list_pos(Listpos *l){
 	Listpos tmp=*l;
 	while(*l!=NULL){

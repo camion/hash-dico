@@ -9,7 +9,6 @@
 
 #include <stdio.h>
 #include "../include/word.h"
-#include "../include/util.h"
 
 int get_word(FILE* stream, char* dest, size_t n);
 void parse_text(FILE* text, List *hash);

@@ -1,4 +1,5 @@
 #include <stdio.h>
+#include <stdlib.h>
 #include <unistd.h>
 #include <signal.h>
 #include <ctype.h>
@@ -22,7 +23,8 @@ int main(int argc, char* argv[]){
     List *hash_table=init_hash_table();
     FILE* text=fopen("Colomba.txt","r");
     parse_text(text, hash_table);
-    print_sentences_containing(text,hash_table,"les");
+    
+    print_sentences_containing(text,hash_table,"regrets");
 
     free_hash(hash_table);
     return 0;

@@ -1,5 +1,7 @@
-#include "../include/read.h"
+#include <string.h>
 #include <ctype.h>
+#include "../include/read.h"
+#include "../include/util.h"
 
 /*
   Extract a word from a stream already opened

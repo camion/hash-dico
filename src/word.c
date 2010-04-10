@@ -1,9 +1,10 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
 #include "../include/word.h"
 #include "../include/read.h"
 #include "../include/list.h"
 #include "../include/util.h"
-
-#include <string.h>
 
 
 
@@ -48,32 +49,6 @@ List alloc_cell_word(char* word){
 /*         string[i]=tolower(string[i]); */
 /* } */
 
-/*
-  Insert a word at the head of the list
-*/
-/* void insert_head_word(List *w, char* word){ */
-/*     List new_cell; */
-/*     new_cell=alloc_cell_word(word); */
-/*     new_cell->next=*w; */
-/*     *w=new_cell; */
-/*     return 1; */
-/* } */
-
-/*
-  Inserts a word at the tail of the list
-*/
-/* void insert_tail_word(List *w, char* word){ */
-/*     List new_cell; */
-/*     List last; */
-/*     new_cell=alloc_cell_word(word); */
-/*     if(*w==NULL) */
-/*         *w=new_cell; */
-/*     else{ */
-/*         last=last_cell_word(*w);/\*O(n)*\/ */
-/*         last->next=new_cell; */
-/*     } */
-/* } */
-
 
 /*
   Inserts a word into the list *w respecting the lexicographical order
@@ -113,11 +88,7 @@ void insert_lexico_word(List *w, char* word, long offset){
     }
 }
 
-/* List last_cell_word(List w){ */
-/*     while(w!=NULL && w->next!=NULL) */
-/*         w=w->next; */
-/*     return w; */
-/* } */
+
 
 List search_word(List hash[], char* word){
     List w =  hash[hash_string(word)%HASH_SIZE];
@@ -125,13 +96,6 @@ List search_word(List hash[], char* word){
         if(strcmp(w->value->word, word) == 0)
 	        return w;
     return NULL;
-}
-
-int count_list_pos(Listpos l){
-    int i=0;
-    for(; l!=NULL; l=l->next)
-	        i++;
-    return i;
 }
 
 void print_list_word(List w){
@@ -142,6 +106,29 @@ void print_list_word(List w){
     for(; w!=NULL; w=w->next)
         printf("%p [ %s -> %p ]\n",w,w->value->word,w->next);
 
+}
+
+/*
+    Merges two list respecting lexical order
+    The merged list is stored in w1
+*/
+void merge_list(List w1, List w2){
+    ;
+}
+
+
+/*
+    Creates a sorted list from lists contained in hash[]
+    It merges all list in hash, in the first box of hash[]
+    Returns the list created
+*/
+List create_sorted_list(List hash[]){
+    int i;
+    /* We merge all lists with the first */
+    List w = hash[0];
+    for(i=1;i<HASH_SIZE;i++)
+        merge_list(w,hash[i]);
+    return w;
 }
 
 void free_list_word(List *w){

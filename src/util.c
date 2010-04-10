@@ -1,3 +1,7 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <sys/types.h> /*winsize*/
+#include <sys/ioctl.h>
 #include  "../include/util.h"
 
 unsigned int hash_string(char *p){
@@ -36,3 +40,4 @@ int column_count(){
     ioctl(1, TIOCGWINSZ, &ws);
     return ws.ws_col;
 }
+
