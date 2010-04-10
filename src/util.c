@@ -62,7 +62,7 @@ void usage(FILE *stream){
 }
 
 int progress_bar(long position, long size){
-    char* begin = "Progress [";
+    char* begin = "Hashing [";
     char* end = "] ";
     int columns = column_count();
     int used = strlen(begin)+strlen(end)+4; /* column used with begin + end + percent */

@@ -18,7 +18,7 @@ void quit(){
 }
 
 int main(int argc, char* argv[]){
-    const char* optstring=":a:p:P:ld:D:h";
+    const char* optstring=":a:p:P:ld:D:hv";
     int option;
 
     /* execute quit() on SIGINT (ctrl-c) */
