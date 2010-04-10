@@ -66,8 +66,8 @@ void progress_bar(long position, long size){
     char* end = "] ";
     int columns = column_count();
     int used = strlen(begin)+strlen(end)+4; /* column used with begin + end + percent */
-    int progress = (position / size) * (columns - used);
-    int percent =  (position / size) * 100;
+    int progress = (position * (columns - used))/ size ;
+    int percent =  (position * 100)/ size;
     int i;
 
     /* fseek(stdout,0,0); */

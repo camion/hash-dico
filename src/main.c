@@ -47,7 +47,7 @@ int main(int argc, char* argv[]){
     FILE* text=fopen("Colomba.txt","r");
     parse_text(text, hash_table);
 
-    print_sentences_containing(text,hash_table,"la");
+    print_sentences_containing(text,hash_table,"femmdzdzdzes");
     fclose(text);
     free_hash(hash_table);
     return 0;
