@@ -73,7 +73,9 @@ void parse_text(FILE* text, List *hash_table){
         key=hash_string(word)%HASH_SIZE;
     	insert_lexico_word(&(hash_table[key]), word, offset);
     }
-    hash_progress_bar(1, 1);/* be sure to stay with 100% */
-    printf("\n");
+    if(verbose){
+	hash_progress_bar(1, 1);/* be sure to stay with 100% */
+	printf("\n");
+    }
 }
 
