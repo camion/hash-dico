@@ -70,9 +70,15 @@ void progress_bar(long position, long size){
     int percent =  (position / size) * 100;
     int i;
 
+    /* fseek(stdout,0,0); */
+    while(fgetc(stdout)!=EOF)
+	fseek(stdout, -1, SEEK_CUR);
+
+    if(columns < used+progress)return;/*not enouth place*/
     printf("%s",begin);
     for(i=0; i<progress; ++i, ++used)printf("#");
     for(; used<columns; ++used)printf("-");
-    printf("%s%3d%%", end, percent);
+    printf("%s%3d%%\r", end, percent);
 
+    fflush(stdout);
 }

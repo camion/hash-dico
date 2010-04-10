@@ -56,6 +56,7 @@ void parse_text(FILE* text, List *hash_table){
     long file_size;
     int key;
 
+    /* get the file size */
     fseek(text, 0, SEEK_END);
     file_size = ftell(text);
     rewind(text);
@@ -64,12 +65,12 @@ void parse_text(FILE* text, List *hash_table){
     while(result!=EOF){
         if(result==2){/* end of sentence */
             offset=ftell(text);
-	    if(offset%2)
+	    if(offset%1000 == 1)/* just sometimes */
 		progress_bar(offset, file_size);
 	}
         result=get_word(text,word,WORD_BUFFER);
-        if(result==EOF)
-            break;
+        /* if(result==EOF) */
+        /*     break; */
         if(word[0]=='\0')
             continue;
         key=hash_string(word)%HASH_SIZE;
