@@ -65,7 +65,7 @@ void parse_text(FILE* text, List *hash_table){
     while(result!=EOF){
         if(result==2){/* end of sentence */
             offset=ftell(text);
-	    if(offset%1000 == 1)/* just sometimes */
+	    if(offset%10 == 1)/* just sometimes */
 		progress_bar(offset, file_size);
 	}
         result=get_word(text,word,WORD_BUFFER);
