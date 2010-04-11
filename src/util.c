@@ -6,6 +6,12 @@
 
 #include  "../include/util.h"
 
+/*
+    Calculates a fingerprint for a string
+    and returns it.
+    We can with this find a key for a word
+    to store it into a hash table.
+*/
 unsigned int hash_string(char *p){
 /* maybe try with (i+1)*word[i] */
     unsigned int h=0,g;
@@ -19,6 +25,11 @@ unsigned int hash_string(char *p){
     return h;
 }
 
+
+/*
+    Allocates memory for the hash
+    and init all list with NULL (calloc)
+*/
 List* init_hash_table(){
     List* hash=(List*)calloc(HASH_SIZE,sizeof(Cell));
     if(hash==NULL){
@@ -28,12 +39,17 @@ List* init_hash_table(){
     return hash;
 }
 
+
+/*
+    Free entirely the hash and every sub-list contained in hash
+*/
 void free_hash(List *hash){
     int i;
     for(i=0;i<HASH_SIZE;i++){
         free_list_word(&hash[i]);
     }
     free(hash);
+    *hash=NULL;
 }
 
 
@@ -70,13 +86,21 @@ void save_index(List index,char* file_name){
     fclose(target);
 }
 
+
+/*
+    Count number of columns in the current prompt
+    Useful for progress bar.
+*/
 int column_count(){
-/* return the number of columns in current term */
     struct winsize ws;
     ioctl(1, TIOCGWINSZ, &ws);
     return ws.ws_col;
 }
 
+/*
+    Print usage of the program, how to use this program.
+    Its printed in the stream given argument *stream.
+*/
 void usage(FILE *stream){
     int columns=column_count(), i;
 
@@ -95,6 +119,11 @@ void usage(FILE *stream){
     for(i=0; i<columns; ++i)fprintf(stream,"-");
 }
 
+
+/*
+    Print the evolution of the hashing.
+    Printed only if '-v' verbose option is called.
+*/
 int hash_progress_bar(long position, long size){
     char* begin = "Hashing [";
     char* end = "] ";
@@ -118,6 +147,10 @@ int hash_progress_bar(long position, long size){
     return percent;
 }
 
+
+/*
+    Calculates and returns size of a file
+*/
 long filesize(FILE* f) {
    long old_pos=ftell(f);
    long size;
