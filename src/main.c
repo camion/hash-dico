@@ -30,6 +30,10 @@ int main(int argc, char* argv[]){
         fclose(text);
 	}
     else if(argc==2){
+        if(strcmp(argv[1],"-h")==0){
+            usage(stdout);
+            return 0;
+        }
 	    text=fopen(argv[1],"r");
         sub_main_interractive(text);
         fclose(text);
