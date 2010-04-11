@@ -105,6 +105,41 @@ int line_count(){
     return ws.ws_row;
 }
 
+
+FILE* get_input_filename(){
+    int columns=column_count(),lines=line_count(), i;
+    char answer[FILENAME_MAX];
+    FILE* text;
+    for(i=0; i<columns; ++i)printf("%c",(i%2)?'*':'-');
+    printf("\n\tMENU: get input file name\n"); lines-=2;
+    for(i=0; i<columns; ++i)printf("%c",(i%2)?'*':'-');
+    printf("\n"); lines--;
+    printf("Please enter input filename.\n"); lines--;
+    for(i=2; i<lines; ++i)printf("\n");/* fill lines i=2 because 2 lines after */
+    for(i=0; i<columns; ++i)printf("%c",(i%2)?'*':'-');
+    printf("Input file name >");
+    scanf("%s",answer);
+    printf("\n");
+    if((text=fopen(answer,"r"))==NULL)
+    	return get_input_filename();
+    return text;
+}
+
+void get_string(char* word,char* message){
+    int columns=column_count(),lines=line_count(), i;
+
+    for(i=0; i<columns; ++i)printf("%c",(i%2)?'*':'-');
+    printf("\n\tMENU: get input file name\n"); lines-=2;
+    for(i=0; i<columns; ++i)printf("%c",(i%2)?'*':'-');
+    printf("\n"); lines--;
+    printf("%s",message); lines--;
+    for(i=2; i<lines; ++i)printf("\n");/* fill lines i=2 because 2 lines after */
+    for(i=0; i<columns; ++i)printf("%c",(i%2)?'*':'-');
+    printf("Input file name >");
+    scanf("%s",&word);
+    printf("\n");
+}
+
 /*
     Print usage of the program, how to use this program.
     Its printed in the stream given argument *stream.
@@ -117,37 +152,37 @@ void usage(FILE *stream){
     fprintf(stream,"\tor\nIndex\n");
     for(i=0; i<columns; ++i)fprintf(stream,"%c",(i%2)?'*':'-');
     fprintf(stream,"\nExamples:\n");
-    fprintf(stream,"Index -aword file\t| Check if word is in file.\n");
-    fprintf(stream,"Index -pword file\t| Print word positions in file.\n");
-    fprintf(stream,"Index -Pword file\t| Print sentences containing word in file.\n");
-    fprintf(stream,"Index -l text    \t| Print sorted list of text's words.\n");
-    fprintf(stream,"Index -dword file\t| Print words begining with word in the text.\n");
-    fprintf(stream,"Index -Dout  file\t| Save sorted list of file's words in out.DICO\n");
-    fprintf(stream,"Index -hout  file\t| Print this help\n");
+    fprintf(stream,"Index -a word file\t| Check if word is in file.\n");
+    fprintf(stream,"Index -p word file\t| Print word positions in file.\n");
+    fprintf(stream,"Index -P word file\t| Print sentences containing word in file.\n");
+    fprintf(stream,"Index -l text     \t| Print sorted list of text's words.\n");
+    fprintf(stream,"Index -d word file\t| Print words begining with word in the text.\n");
+    fprintf(stream,"Index -D out  file\t| Save sorted list of file's words in out.DICO\n");
+    fprintf(stream,"Index -h out  file\t| Print this help\n");
     for(i=0; i<columns; ++i)fprintf(stream,"%c",(i%2)?'*':'-');
 }
 
 char main_menu(){
-	    int columns=column_count(),lines=line_count(), i;
-	    char answer;
-		for(i=0; i<columns; ++i)printf("%c",(i%2)?'*':'-');
-		printf("\n\tMENU:\n"); lines-=2;
-		for(i=0; i<columns; ++i)printf("%c",(i%2)?'*':'-');
-		printf("\n"); lines--;
-		printf("0)\t| exit menu\n"); lines--;
-		printf("1)\t| Check if word is in file.\n"); lines--;
-		printf("2)\t| Print word positions in file.\n"); lines--;
-		printf("3)\t| Print sentences containing word in file.\n"); lines--;
-		printf("4)\t| Print sorted list of text's words.\n"); lines--;
-		printf("5)\t| Print words begining with word in the text.\n"); lines--;
-		printf("6)\t| Save sorted list of file's words in out.DICO\n"); lines--;
-		for(i=2; i<lines; ++i)printf("\n");/* fill lines i=2 because 2 lines after */
-		for(i=0; i<columns; ++i)printf("%c",(i%2)?'*':'-');
-		printf("Choice >");
-		answer=getchar();
-		return answer;
+    int columns=column_count(),lines=line_count(), i;
+    char answer;
+    for(i=0; i<columns; ++i)printf("%c",(i%2)?'*':'-');
+    printf("\n\tMENU:\n"); lines-=2;
+    for(i=0; i<columns; ++i)printf("%c",(i%2)?'*':'-');
+    printf("\n"); lines--;
+    printf("0)\t| exit menu\n"); lines--;
+    printf("1)\t| Check if word is in file.\n"); lines--;
+    printf("2)\t| Print word positions in file.\n"); lines--;
+    printf("3)\t| Print sentences containing word in file.\n"); lines--;
+    printf("4)\t| Print sorted list of text's words.\n"); lines--;
+    printf("5)\t| Print words begining with word in the text.\n"); lines--;
+    printf("6)\t| Save sorted list of file's words in out.DICO\n"); lines--;
+    for(i=2; i<lines; ++i)printf("\n");/* fill lines i=2 because 2 lines after */
+    for(i=0; i<columns; ++i)printf("%c",(i%2)?'*':'-');
+    printf("Choice >");
+    answer=getchar();
+    printf("\n");
+    return answer-'0';/* return the number */
 }
-
 
 void sub_main_command(int argc, char *argv[]){
     int size;
@@ -156,7 +191,7 @@ void sub_main_command(int argc, char *argv[]){
     List *hash,tmp;
     List sorted_list=NULL;
     FILE* text;
-    size=strlen(argv[1]);    
+    size=strlen(argv[1]);
     /*if(argc==3 && !(size==2 && strcmp(argv[1],"-l")==0)){
         fprintf(stderr,"Arguments missing, see usage\n");
         return;
@@ -170,7 +205,7 @@ void sub_main_command(int argc, char *argv[]){
     }
     if(strcmp(argv[1],"-a")==0 || strcmp(argv[1],"-va")==0 || strcmp(argv[1],"-av")==0){
         if(argc==3){
-            fprintf(stderr,"Arguments missing, see usage\n");            
+            fprintf(stderr,"Arguments missing, see usage\n");
             return;
         }
         text=fopen(argv[3],"r");
@@ -186,35 +221,35 @@ void sub_main_command(int argc, char *argv[]){
     }
     if(strcmp(argv[1],"-p")==0 || strcmp(argv[1],"-vp")==0 || strcmp(argv[1],"-pv")==0){
         if(argc==3){
-            fprintf(stderr,"Arguments missing, see usage\n");            
+            fprintf(stderr,"Arguments missing, see usage\n");
             return;
         }
         menu1=1;
     }
     if(strcmp(argv[1],"-P")==0 || strcmp(argv[1],"-vP")==0 || strcmp(argv[1],"-Pv")==0){
         if(argc==3){
-            fprintf(stderr,"Arguments missing, see usage\n");            
+            fprintf(stderr,"Arguments missing, see usage\n");
             return;
         }
         menu2=1;
     }
     if(strcmp(argv[1],"-l")==0 || strcmp(argv[1],"-vl")==0 || strcmp(argv[1],"-lv")==0){
         if(argc==3){
-            fprintf(stderr,"Arguments missing, see usage\n");            
+            fprintf(stderr,"Arguments missing, see usage\n");
             return;
         }
         menu3=1;
     }
     if(strcmp(argv[1],"-d")==0 || strcmp(argv[1],"-vd")==0 || strcmp(argv[1],"-dv")==0){
         if(argc==3){
-            fprintf(stderr,"Arguments missing, see usage\n");            
+            fprintf(stderr,"Arguments missing, see usage\n");
             return;
         }
         menu4=1;
     }
     if(strcmp(argv[1],"-D")==0 || strcmp(argv[1],"-vD")==0 || strcmp(argv[1],"-Dv")==0){
         if(argc==3){
-            fprintf(stderr,"Arguments missing, see usage\n");            
+            fprintf(stderr,"Arguments missing, see usage\n");
             return;
         }
         menu5=1;
@@ -234,7 +269,7 @@ void sub_main_command(int argc, char *argv[]){
             return;
         }
         parse_text(text,hash);
-        sorted_list=create_sorted_list(hash);        
+        sorted_list=create_sorted_list(hash);
         if(menu1){
             if((tmp=search_word(hash,argv[2]))==NULL)
                 fprintf(stderr,"\"%s\" not found in %s\n",argv[2],argv[3]);
@@ -254,7 +289,7 @@ void sub_main_command(int argc, char *argv[]){
         free_hash(hash);
         free_sorted_list(&sorted_list);
     }
-    
+
 }
 
 
