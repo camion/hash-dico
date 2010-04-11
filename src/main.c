@@ -96,7 +96,6 @@ int main(int argc, char* argv[]){
     }else{/* interactively get user request */
 	menu_mode=1;
 	verbose=1; /*in this mode ... speak a lot! */
-
 	for(option=main_menu(); option!=EOF && option!=0; option=main_menu()){
 	    switch (option) {
 	    case 1: printf("camion");
