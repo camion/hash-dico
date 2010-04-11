@@ -96,21 +96,12 @@ int main(int argc, char* argv[]){
     }else{/* interactively get user request */
 	menu_mode=1;
 	verbose=1; /*in this mode ... speak a lot! */
-	for(;;){
-	    int columns=column_count(),lines=line_count(), i;
 
-		for(i=0; i<columns; ++i)printf("%c",(i%2)?'*':'-');
-		printf("\n\tMENU:\n"); lines-=2;
-		for(i=0; i<columns; ++i)printf("%c",(i%2)?'*':'-');
-		printf("\n"); lines--;
+	for(option=main_menu(); option!=EOF && option!=0; option=main_menu()){
+	    switch (option) {
+	    case 1: printf("camion");
 
-		for(i=2; i<lines; ++i)printf("\n");/* fill lines i=2 because 2 lines after */
-		for(i=0; i<columns; ++i)printf("%c",(i%2)?'*':'-');
-		printf("Choice >");
-		getchar();
-
-
-
+	    }
 	}
     }
 

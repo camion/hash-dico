@@ -130,6 +130,27 @@ void usage(FILE *stream){
     for(i=0; i<columns; ++i)fprintf(stream,"%c",(i%2)?'*':'-');
 }
 
+char main_menu(){
+	    int columns=column_count(),lines=line_count(), i;
+	    char answer;
+		for(i=0; i<columns; ++i)printf("%c",(i%2)?'*':'-');
+		printf("\n\tMENU:\n"); lines-=2;
+		for(i=0; i<columns; ++i)printf("%c",(i%2)?'*':'-');
+		printf("\n"); lines--;
+		printf("0)\t| exit menu\n"); lines--;
+		printf("1)\t| Check if word is in file.\n"); lines--;
+		printf("2)\t| Print word positions in file.\n"); lines--;
+		printf("3)\t| Print sentences containing word in file.\n"); lines--;
+		printf("4)\t| Print sorted list of text's words.\n"); lines--;
+		printf("5)\t| Print words begining with word in the text.\n"); lines--;
+		printf("6)\t| Save sorted list of file's words in out.DICO\n"); lines--;
+		for(i=2; i<lines; ++i)printf("\n");/* fill lines i=2 because 2 lines after */
+		for(i=0; i<columns; ++i)printf("%c",(i%2)?'*':'-');
+		printf("Choice >");
+		answer=getchar();
+		printf("\n");
+		return answer;
+}
 
 /*
     Print the evolution of the hashing.

@@ -12,6 +12,7 @@ List* init_hash_table();
 void free_hash(List *hash);
 int column_count();
 int line_count();
+char main_menu();
 void usage(FILE *stream);
 int hash_progress_bar(long position, long size);
 long filesize(FILE* f);
