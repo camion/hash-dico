@@ -20,4 +20,5 @@ int hash_progress_bar(long position, long size);
 long filesize(FILE* f);
 void save_index(List index,char* basename);
 void sub_main_command(int argc, char *argv[]);
+void sub_main_interractive(FILE* text);
 #endif

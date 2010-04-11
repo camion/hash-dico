@@ -136,7 +136,7 @@ void get_string(char* word,char* message){
     for(i=2; i<lines; ++i)printf("\n");/* fill lines i=2 because 2 lines after */
     for(i=0; i<columns; ++i)printf("%c",(i%2)?'*':'-');
     printf("Input file name >");
-    scanf("%s",&word);
+    scanf("%s",word);
     printf("\n");
 }
 
@@ -214,7 +214,7 @@ void sub_main_command(int argc, char *argv[]){
             return;
         }
         if(search_word_text(text,argv[2]))
-            printf("\"%s\" is in %s\n",argv[2],argv[3]);
+            printf("\"%s\" is FOUND in %s\n",argv[2],argv[3]);
         else
             printf("\"%s\" is NOT in %s\n",argv[2],argv[3]);
         return;
@@ -233,13 +233,8 @@ void sub_main_command(int argc, char *argv[]){
         }
         menu2=1;
     }
-    if(strcmp(argv[1],"-l")==0 || strcmp(argv[1],"-vl")==0 || strcmp(argv[1],"-lv")==0){
-        if(argc==3){
-            fprintf(stderr,"Arguments missing, see usage\n");
-            return;
-        }
+    if(strcmp(argv[1],"-l")==0 || strcmp(argv[1],"-vl")==0 || strcmp(argv[1],"-lv")==0)
         menu3=1;
-    }
     if(strcmp(argv[1],"-d")==0 || strcmp(argv[1],"-vd")==0 || strcmp(argv[1],"-dv")==0){
         if(argc==3){
             fprintf(stderr,"Arguments missing, see usage\n");
@@ -291,6 +286,57 @@ void sub_main_command(int argc, char *argv[]){
     }
 
 }
+
+
+void sub_main_interractive(FILE* text){
+    int option;
+    int need_hash=0;
+    int need_list=0;
+    List  l=NULL;
+    List* hash_table=NULL;
+    char word[WORD_BUFFER];
+    char *output=NULL;
+
+    for(option=main_menu(); option!=EOF; option=main_menu()){
+        if(option==0)return;
+        if(option!=1)need_hash=1;
+        if(option==4 || option==5 || option==6)need_list=1;
+        /*********************/
+        /* do things needed  */
+        /*********************/
+        if(need_list && l==NULL)need_hash=1;/* list need this */
+        if(need_hash && hash_table==NULL){
+            hash_table=init_hash_table();
+            parse_text(text, hash_table);
+            if(need_list && l==NULL)l=create_sorted_list(hash_table);
+        }
+        /****************************/
+        /* do explicit user request */
+        /****************************/
+        switch(option){
+            case 1:
+                get_string(word,"Enter the word to search.");
+                if(hash_table==NULL){/* go faster if don't need hash to look directly in the text */
+                    if(search_word_text(text, word))printf("TRUE\n");
+                    else printf("FALSE\n");
+                }else{/* if we got hash look in this */
+                    if(search_word(hash_table, word))printf("TRUE\n");
+                    else printf("FALSE\n");
+                }
+            break;
+            case 3:
+                get_string(word,"Enter the word.");
+                print_sentences_containing(text, stdout, hash_table, word);
+            break;
+            case 6:
+                if(verbose)
+                    printf("Saving sorted list in \"%s.DICO\"...\n",output); break;
+                save_index(l, output);
+            break;
+        }
+    }
+}
+
 
 
 /*
