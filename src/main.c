@@ -81,8 +81,9 @@ int main(int argc, char* argv[]){
 	parse_text(text, hash_table);
     }
 
-    if(menu==3)print_sentences_containing(text, stdout, hash_table, word);
-
+    switch(menu){
+    case 3:print_sentences_containing(text, stdout, hash_table, word); break;
+    }
 
     fclose(text);
     if(must_hash)free_hash(hash_table);
