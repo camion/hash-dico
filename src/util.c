@@ -49,7 +49,6 @@ void free_hash(List *hash){
         free_list_word(&hash[i]);
     }
     free(hash);
-    *hash=NULL;
 }
 
 
@@ -57,21 +56,25 @@ void free_hash(List *hash){
     Save the index in a text file
     If there's no file_name, index is saved with a default_name
 */
-void save_index(List index,char* file_name){
+void save_index(List index,char* basename){
     Listpos tmp;
+    char file_name[strlen(basename)+6]; /* 6=strlen(".DICO")+'\0' */
+    strcpy(file_name,basename);
+    strcat(file_name,".DICO");
+    int size_name=strlen(basename);
     /* if nothing to save, get out of here! */
     if(index==NULL)
         return;
         
     FILE* target;
     /* if there's a file name we create it */
-    if(strlen(file_name)!=0)
+    if(size_name!=0)
         target=fopen(file_name,"w");
     /* or we create a default file */
     else
-        target=fopen("default_name.DICO","w");
+        target=fopen("default.DICO","w");
     if(target==NULL){
-        fprintf(stderr,"Unable to save index in %s\n",file_name);
+        fprintf(stderr,"Unable to save index in %s\n",(size_name==0)?"default.DICO":file_name);
         return;
     }
     /* browses all words */
