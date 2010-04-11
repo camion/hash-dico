@@ -36,23 +36,35 @@ void free_hash(List *hash){
     free(hash);
 }
 
+
+/*
+    Save the index in a text file
+    If there's no file_name, index is saved with a default_name
+*/
 void save_index(List index,char* file_name){
     Listpos tmp;
     /* if nothing to save, get out of here! */
     if(index==NULL)
         return;
-    FILE* target=fopen(file_name,"w");
+        
+    FILE* target;
+    /* if there's a file name we create it */
+    if(strlen(file_name)!=0)
+        target=fopen(file_name,"w");
+    /* or we create a default file */
+    else
+        target=fopen("default_name.DICO","w");
     if(target==NULL){
         fprintf(stderr,"Unable to save index in %s\n",file_name);
         return;
     }
     /* browses all words */
-    for(;index!=NULL;index=index->suiv){
+    for(;index!=NULL;index=index->next){
         /* print the word */
         fprintf(target,"%s ",index->value->word);
         /* browses all position */
-        for(tmp=index->value->positions;tmp!=NULL;tmp=tmp->suiv)
-            fprintf(target,"%d ",tmp->position);
+        for(tmp=index->value->positions;tmp!=NULL;tmp=tmp->next)
+            fprintf(target,"%ld ",tmp->position);
         fprintf(target,"\n");
     }
     fclose(target);
