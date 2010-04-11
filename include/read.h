@@ -2,7 +2,7 @@
 #define _READ_
 
 #define WORD_BUFFER 256
-#define END_OF_WORD(c) ((c==' ' || c==',' || c=='\n' || c=='\t'))
+#define END_OF_WORD(c) ((c==' ' || c==',' || c=='\n' || c=='\t' || c==';' || c=='*' || c=='-' || c=='\''))
 #define END_OF_PHRASE(c) ((c=='.' || c=='?' || c=='!'))
 #define TRUE 1
 #define FALSE 0
