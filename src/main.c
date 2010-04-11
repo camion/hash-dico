@@ -18,46 +18,68 @@ void quit(){
     exit(1);
 }
 
+
 int main(int argc, char* argv[]){
     const char* optstring=":a:p:P:ld:D:hv";
     int option;
-    int menu=0;
-    int must_hash=0;
-    int sorted_list=0;
     extern int optind;
-    FILE* text;
-    List* hash_table;
+    FILE* text=NULL;
+    List* hash_table=NULL;
+    List  l=NULL;
     char* word=NULL;
+    char* output=NULL;
+    int menu=0;
+    int need_hash=0;
+    int need_list=0;
+
 
     /* execute quit() on SIGINT (ctrl-c) */
     signal(SIGINT,quit);
     /* check if root execute the program */
     if(getgid() == 0)fprintf(stderr,"You shouldn't run %s as root.\n",argv[0]);
 
+    if(argc==1){
+	usage(stderr);
+	return 1;
+    }
     if(argc>2){
     /* getopt stuff */
 	while (EOF!=(option=getopt(argc,argv,optstring))) {
 	    switch (option) {
-	    case 'a': printf("Check if \"%s\" is in the text.\n",optarg); break;
+	    case 'a':
+		menu=1;
+		word = malloc((strlen(optarg)+1)*sizeof(char));
+		strcpy(word, optarg);
+		break;
 	    case 'p':
-		must_hash=1;
+		need_hash=1;
 		menu=2;
 		word = malloc((strlen(optarg)+1)*sizeof(char));
 		strcpy(word, optarg);
 		break;
 	    case 'P':
-		must_hash=1;
+		need_hash=1;
 		menu=3;
 		word = malloc((strlen(optarg)+1)*sizeof(char));
 		strcpy(word, optarg);
 		break;
-	    case 'l': sorted_list=1; printf("Print words of text sorted list.\n"); break;
-	    case 'd': sorted_list=1; printf("Print words begining with \"%s*\" in the text.\n",optarg); break;
-	    case 'D': sorted_list=1; printf("Save sorted list in %s.DICO\n",optarg); break;
+	    case 'l':
+		menu=4;
+		need_list=1; printf("Print words of text sorted list.\n"); break;
+	    case 'd':
+		menu=5;
+		need_list=1;
+		printf("Print words begining with \"%s*\" in the text.\n",optarg); break;
+	    case 'D':
+		menu=6;
+		need_list=1;
+		output = malloc((strlen(optarg)+1)*sizeof(char));
+		strcpy(output, optarg);
+		printf("Save sorted list in %s.DICO\n",optarg); break;
 	    case 'v': verbose=1; break;
 	    case 'h': usage(stdout); return 0;
 	    case ':': printf("Option -%c requires an operand\n",optopt); usage(stderr); return 1;
-	    case '?': printf("Unknown option %c\n",optopt);usage(stderr); return 1;
+	    case '?': printf("Unknown option %c\n",optopt); usage(stderr); return 1;
 	    }
 	}
 	if(optind+1 != argc){
@@ -65,28 +87,61 @@ int main(int argc, char* argv[]){
 	    usage(stderr);
 	    return 1;
 	}
-    }else{/* interactive */
+    }else{/* interactively get user request */
 
 
     }
 
+
+/*********************/
+/* do things needed  */
+/*********************/
     if((text=fopen(argv[optind],"r")) == NULL){
 	fprintf(stderr,"Unable to open %s\n",argv[optind]);
 	usage(stderr);
-	return 1;
+	exit(1);
     }
 
-    if(must_hash){
+    if(need_list)need_hash=1;/* list need this */
+
+    if(need_hash){
 	hash_table=init_hash_table();
 	parse_text(text, hash_table);
+	if(need_list)l=create_sorted_list(hash_table);
     }
 
+/****************************/
+/* do explicit user request */
+/****************************/
     switch(menu){
-    case 3:print_sentences_containing(text, stdout, hash_table, word); break;
+    case 1:
+	if(hash_table==NULL){/* go faster if don't need hash to look directly in the text */
+	    if(search_word_text(text, word))printf("TRUE\n");
+	    else printf("FALSE\n");
+	}else{/* if we got hash look in this */
+	    if(search_word(hash_table, word))printf("TRUE\n");
+	    else printf("FALSE\n");
+	}
+	break;
+    case 3:
+	print_sentences_containing(text, stdout, hash_table, word);
+	break;
+    case 6:
+	save_index(l, output);
+	break;
     }
 
+
+/******************/
+/* cleaning stuff */
+/******************/
     fclose(text);
-    if(must_hash)free_hash(hash_table);
+    if(hash_table != NULL){
+	free_hash(hash_table);
+	if(l != NULL)free_sorted_list(&l);
+    }
+    if(word != NULL)free(word);
+    if(output != NULL)free(output);
 
     return 0;
 }
