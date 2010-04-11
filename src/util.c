@@ -54,7 +54,7 @@ void usage(FILE *stream){
     fprintf(stream,"Index -a word file\t| Check if word is in file.\n");
     fprintf(stream,"Index -p word file\t| Print word positions in file.\n");
     fprintf(stream,"Index -P word file\t| Print santances containing word in file.\n");
-    fprintf(stream,"Index -l word     \t| Print sorted list of text word's.\n");
+    fprintf(stream,"Index -l word     \t| Print sorted list of text's words.\n");
     fprintf(stream,"Index -d word file\t| Print words begining with word in the text.\n");
     fprintf(stream,"Index -D out  file\t| Save sorted list of file's words in out.DICO\n");
     fprintf(stream,"Index -h out  file\t| Print this help\n");

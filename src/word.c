@@ -73,7 +73,7 @@ void insert_lexico_word(List *w, char* word, long offset){
         new_cell->next = *w;
         *w=new_cell;
         insert_head_pos(&(new_cell->value->positions), offset);
-    /* if the word must be inserted after the head of the list */
+	/* if the word must be inserted after the head of the list */
     }else{
         /* search word's position */
         tmp1=tmp2=*w;
@@ -98,7 +98,7 @@ List search_word(List hash[], char* word){
     List w =  hash[hash_string(word)%HASH_SIZE];
     for(; w!=NULL; w=w->next)
         if(strcmp(w->value->word, word) == 0)
-	        return w;
+	    return w;
     return NULL;
 }
 
@@ -113,9 +113,9 @@ void print_list_word(List w){
 }
 
 /*
-    Merges two list respecting lexical order
-    The merged list is stored in w1
-    w2 stay intact
+  Merges two list respecting lexical order
+  The merged list is stored in w1
+  w2 stay intact
 */
 void merge_list(List *w1, const List w2){
     List new_cell;
@@ -153,9 +153,9 @@ void merge_list(List *w1, const List w2){
 
 
 /*
-    Creates a sorted list from lists contained in hash[]
-    It merges all list in hash, in the first box of hash[]
-    Returns the list created
+  Creates a sorted list from lists contained in hash[]
+  It merges all list in hash, in the first box of hash[]
+  Returns the list created
 */
 List create_sorted_list(List hash[]){
     int i;
@@ -179,26 +179,24 @@ void free_list_word(List *w){
     *w=NULL;
 }
 
-void print_sentences_containing(FILE* stream, List hash[], char *word){
+void print_sentences_containing(FILE* text, FILE *output, List hash[], char *word){
     List w =  search_word(hash,word);
-    if(w==NULL)
-        return;
+    if(w==NULL) return;
     Listpos tmp=w->value->positions;
     int i=count_list_pos(tmp);
     char c;
 
-	printf("\t%s apparaît dans %d phrases du texte :\n\n",word,i);
-	/* print every sentences */
+    /* if(verbose)printf("%s apparaît dans %d phrases du texte :\n\n",word,i); */
+    /* print every sentences */
     for(i=1;tmp!=NULL;tmp=tmp->next,i++){
-        /* we set stream position at the begining of the sentence*/
-        fseek(stream,tmp->position,SEEK_SET);
-        printf("\t> #%d ",i);
-        while((c=fgetc(stream)) && c!=EOF){
-            printf("%c",c);
-            if(END_OF_PHRASE(c))
-                break;
+        /* we set text position at the begining of the sentence*/
+        fseek(text,tmp->position,SEEK_SET);
+        fprintf(output,"[%08d] ",i);
+        while((c=fgetc(text)) && c!=EOF){
+            fprintf(output,"%c",c);
+            if(END_OF_PHRASE(c))break;
         }
-        printf("\n");
+        fprintf(output,"\n");
     }
 }
 

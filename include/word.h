@@ -24,7 +24,7 @@ void merge_list(List *w1, const List w2);
 List create_sorted_list(List hash[]);
 List last_cell_word(List w);
 List search_word(List hash[],char* word);
-void print_sentences_containing(FILE* stream, List hash[], char *word);
+void print_sentences_containing(FILE* text, FILE *output, List hash[], char *word);
 void print_list_word(List w);
 void free_list_word(List *w);
 
