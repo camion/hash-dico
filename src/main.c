@@ -29,6 +29,7 @@ int main(int argc, char* argv[]){
     char* word=NULL;
     char* output=NULL;
     int menu=0;
+    int menu_mode=0;
     int need_hash=0;
     int need_list=0;
 
@@ -43,7 +44,9 @@ int main(int argc, char* argv[]){
 	return 1;
     }
     if(argc>2){
-	/* getopt stuff */
+/**********************/
+/* command line stuff */
+/**********************/
 	while (EOF!=(option=getopt(argc,argv,optstring))) {
 	    switch (option) {
 	    case 'a':
@@ -86,14 +89,27 @@ int main(int argc, char* argv[]){
 	/*     usage(stderr); */
 	/*     return 1; */
 	/* } */
+
+/**************************/
+/* interactive menu stuff */
+/**************************/
     }else{/* interactively get user request */
+	menu_mode=1;
 	verbose=1; /*in this mode ... speak a lot! */
-	int columns=column_count(),lines=line_count(), i;
-	for(i=0; i<columns; ++i)printf("%c",(i%2)?'*':'-');
-	printf("\n\tMENU:\n"); lines+=2;
-	for(i=0; i<columns; ++i)printf("%c",(i%2)?'*':'-');
-	printf("\n"); lines++;
 	for(;;){
+	    int columns=column_count(),lines=line_count(), i;
+
+		for(i=0; i<columns; ++i)printf("%c",(i%2)?'*':'-');
+		printf("\n\tMENU:\n"); lines-=2;
+		for(i=0; i<columns; ++i)printf("%c",(i%2)?'*':'-');
+		printf("\n"); lines--;
+
+		for(i=2; i<lines; ++i)printf("\n");/* fill lines i=2 because 2 lines after */
+		for(i=0; i<columns; ++i)printf("%c",(i%2)?'*':'-');
+		printf("Choice >");
+		getchar();
+
+
 
 	}
     }
