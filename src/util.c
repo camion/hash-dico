@@ -65,7 +65,7 @@ void save_index(List index,char* basename){
     /* if nothing to save, get out of here! */
     if(index==NULL)
         return;
-        
+
     FILE* target;
     /* if there's a file name we create it */
     if(size_name!=0)
@@ -80,7 +80,10 @@ void save_index(List index,char* basename){
     /* browses all words */
     for(;index!=NULL;index=index->next){
         /* print the word */
-        fprintf(target,"%s ",index->value->word);
+        if(fprintf(target,"%s ",index->value->word) < 1){
+	    fprintf(stderr,"Unable to write in \"%s\".",file_name);
+	}
+
         /* browses all position */
         for(tmp=index->value->positions;tmp!=NULL;tmp=tmp->next)
             fprintf(target,"%ld ",tmp->position);
@@ -91,13 +94,18 @@ void save_index(List index,char* basename){
 
 
 /*
-    Count number of columns in the current prompt
-    Useful for progress bar.
+    Count number of columns in the current terminal
+    Useful for nice print on stdout.
 */
 int column_count(){
     struct winsize ws;
     ioctl(1, TIOCGWINSZ, &ws);
     return ws.ws_col;
+}
+int line_count(){
+    struct winsize ws;
+    ioctl(1, TIOCGWINSZ, &ws);
+    return ws.ws_row;
 }
 
 /*
@@ -107,19 +115,19 @@ int column_count(){
 void usage(FILE *stream){
     int columns=column_count(), i;
 
-    for(i=0; i<columns; ++i)fprintf(stream,"-");
+    for(i=0; i<columns; ++i)fprintf(stream,"%c",(i%2)?'*':'-');
     fprintf(stream,"\nSYNOPSIS:\nIndex [option] file\n");
     fprintf(stream,"\tor\nIndex\n");
-    for(i=0; i<columns; ++i)fprintf(stream,"-");
+    for(i=0; i<columns; ++i)fprintf(stream,"%c",(i%2)?'*':'-');
     fprintf(stream,"\nExamples:\n");
-    fprintf(stream,"Index -a word file\t| Check if word is in file.\n");
-    fprintf(stream,"Index -p word file\t| Print word positions in file.\n");
-    fprintf(stream,"Index -P word file\t| Print sentences containing word in file.\n");
-    fprintf(stream,"Index -l word     \t| Print sorted list of text's words.\n");
-    fprintf(stream,"Index -d word file\t| Print words begining with word in the text.\n");
-    fprintf(stream,"Index -D out  file\t| Save sorted list of file's words in out.DICO\n");
-    fprintf(stream,"Index -h out  file\t| Print this help\n");
-    for(i=0; i<columns; ++i)fprintf(stream,"-");
+    fprintf(stream,"Index -aword file\t| Check if word is in file.\n");
+    fprintf(stream,"Index -pword file\t| Print word positions in file.\n");
+    fprintf(stream,"Index -Pword file\t| Print sentences containing word in file.\n");
+    fprintf(stream,"Index -l text    \t| Print sorted list of text's words.\n");
+    fprintf(stream,"Index -dword file\t| Print words begining with word in the text.\n");
+    fprintf(stream,"Index -Dout  file\t| Save sorted list of file's words in out.DICO\n");
+    fprintf(stream,"Index -hout  file\t| Print this help\n");
+    for(i=0; i<columns; ++i)fprintf(stream,"%c",(i%2)?'*':'-');
 }
 
 

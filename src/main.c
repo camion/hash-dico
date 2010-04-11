@@ -43,7 +43,7 @@ int main(int argc, char* argv[]){
 	return 1;
     }
     if(argc>2){
-    /* getopt stuff */
+	/* getopt stuff */
 	while (EOF!=(option=getopt(argc,argv,optstring))) {
 	    switch (option) {
 	    case 'a':
@@ -75,21 +75,27 @@ int main(int argc, char* argv[]){
 		need_list=1;
 		output = malloc((strlen(optarg)+1)*sizeof(char));
 		strcpy(output, optarg);
-		printf("Save sorted list in %s.DICO\n",optarg); break;
 	    case 'v': verbose=1; break;
 	    case 'h': usage(stdout); return 0;
-	    case ':': printf("Option -%c requires an operand\n",optopt); usage(stderr); return 1;
-	    case '?': printf("Unknown option %c\n",optopt); usage(stderr); return 1;
+	    case ':': fprintf(stderr,"Option -%c requires an operand\n",optopt); usage(stderr); return 1;
+	    case '?': fprintf(stderr,"Unknown option %c\n",optopt); usage(stderr); return 1;
 	    }
 	}
-	if(optind+1 != argc){
-	    fprintf(stderr,"You must specifiate filename\n");
-	    usage(stderr);
-	    return 1;
-	}
+	/* if(optind+1 != argc){ */
+	/*     fprintf(stderr,"You must specifiate filename\n"); */
+	/*     usage(stderr); */
+	/*     return 1; */
+	/* } */
     }else{/* interactively get user request */
+	verbose=1; /*in this mode ... speak a lot! */
+	int columns=column_count(),lines=line_count(), i;
+	for(i=0; i<columns; ++i)printf("%c",(i%2)?'*':'-');
+	printf("\n\tMENU:\n"); lines+=2;
+	for(i=0; i<columns; ++i)printf("%c",(i%2)?'*':'-');
+	printf("\n"); lines++;
+	for(;;){
 
-
+	}
     }
 
 
@@ -127,6 +133,8 @@ int main(int argc, char* argv[]){
 	print_sentences_containing(text, stdout, hash_table, word);
 	break;
     case 6:
+	if(verbose)
+	    printf("Saving sorted list in \"%s.DICO\"...\n",output); break;
 	save_index(l, output);
 	break;
     }

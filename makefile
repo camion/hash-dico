@@ -1,5 +1,5 @@
 CC=gcc
-CFLAGS=-Wall -ansi -g
+CFLAGS=-Wall -ansi -g -O2
 
 EXEC=main
 SRC=$(wildcard src/*.c)

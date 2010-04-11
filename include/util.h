@@ -11,6 +11,7 @@ unsigned int hash_string(char *p);
 List* init_hash_table();
 void free_hash(List *hash);
 int column_count();
+int line_count();
 void usage(FILE *stream);
 int hash_progress_bar(long position, long size);
 long filesize(FILE* f);
