@@ -61,20 +61,14 @@ void save_index(List index,char* basename){
     char file_name[strlen(basename)+6]; /* 6=strlen(".DICO")+'\0' */
     strcpy(file_name,basename);
     strcat(file_name,".DICO");
-    int size_name=strlen(basename);
     /* if nothing to save, get out of here! */
     if(index==NULL)
         return;
 
     FILE* target;
-    /* if there's a file name we create it */
-    if(size_name!=0)
-        target=fopen(file_name,"w");
-    /* or we create a default file */
-    else
-        target=fopen("default.DICO","w");
+    target=fopen(file_name,"w");
     if(target==NULL){
-        fprintf(stderr,"Unable to save index in %s\n",(size_name==0)?"default.DICO":file_name);
+        fprintf(stderr,"Unable to save index in %s\n",file_name);
         return;
     }
     /* browses all words */
