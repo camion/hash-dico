@@ -5,6 +5,7 @@
 #include <string.h>
 
 #include  "../include/util.h"
+#include  "../include/read.h"
 
 /*
     Calculates a fingerprint for a string
@@ -144,9 +145,118 @@ char main_menu(){
 		for(i=0; i<columns; ++i)printf("%c",(i%2)?'*':'-');
 		printf("Choice >");
 		answer=getchar();
-		printf("\n");
 		return answer;
 }
+
+
+void sub_main_command(int argc, char *argv[]){
+    int size;
+    int menu1,menu2,menu3,menu4,menu5;
+    menu1=menu2=menu3=menu4=menu5=0;
+    List *hash,tmp;
+    List sorted_list=NULL;
+    FILE* text;
+    size=strlen(argv[1]);    
+    /*if(argc==3 && !(size==2 && strcmp(argv[1],"-l")==0)){
+        fprintf(stderr,"Arguments missing, see usage\n");
+        return;
+    }*/
+    if(size!=2 && size!=3){
+        fprintf(stderr,"Argument %s unknown\n",argv[1]);
+        return;
+    }
+    if((size==2 && argv[1][0]=='v') || (size==3 && (argv[1][1]=='v' || argv[1][2]=='v'))){
+        verbose=1;
+    }
+    if(strcmp(argv[1],"-a")==0 || strcmp(argv[1],"-va")==0 || strcmp(argv[1],"-av")==0){
+        if(argc==3){
+            fprintf(stderr,"Arguments missing, see usage\n");            
+            return;
+        }
+        text=fopen(argv[3],"r");
+        if(text==NULL){
+            fprintf(stderr,"Error while opening %s\n",argv[3]);
+            return;
+        }
+        if(search_word_text(text,argv[2]))
+            printf("\"%s\" is in %s\n",argv[2],argv[3]);
+        else
+            printf("\"%s\" is NOT in %s\n",argv[2],argv[3]);
+        return;
+    }
+    if(strcmp(argv[1],"-p")==0 || strcmp(argv[1],"-vp")==0 || strcmp(argv[1],"-pv")==0){
+        if(argc==3){
+            fprintf(stderr,"Arguments missing, see usage\n");            
+            return;
+        }
+        menu1=1;
+    }
+    if(strcmp(argv[1],"-P")==0 || strcmp(argv[1],"-vP")==0 || strcmp(argv[1],"-Pv")==0){
+        if(argc==3){
+            fprintf(stderr,"Arguments missing, see usage\n");            
+            return;
+        }
+        menu2=1;
+    }
+    if(strcmp(argv[1],"-l")==0 || strcmp(argv[1],"-vl")==0 || strcmp(argv[1],"-lv")==0){
+        if(argc==3){
+            fprintf(stderr,"Arguments missing, see usage\n");            
+            return;
+        }
+        menu3=1;
+    }
+    if(strcmp(argv[1],"-d")==0 || strcmp(argv[1],"-vd")==0 || strcmp(argv[1],"-dv")==0){
+        if(argc==3){
+            fprintf(stderr,"Arguments missing, see usage\n");            
+            return;
+        }
+        menu4=1;
+    }
+    if(strcmp(argv[1],"-D")==0 || strcmp(argv[1],"-vD")==0 || strcmp(argv[1],"-Dv")==0){
+        if(argc==3){
+            fprintf(stderr,"Arguments missing, see usage\n");            
+            return;
+        }
+        menu5=1;
+    }
+    if(!menu1 && !menu2 && !menu3 && !menu4 && !menu5){
+        fprintf(stderr,"Argument %s unknown\n",argv[1]);
+        return;
+    }
+    else{
+        hash=init_hash_table();
+        if(menu3)
+            text=fopen(argv[2],"r");
+        else
+            text=fopen(argv[3],"r");
+        if(text==NULL){
+            fprintf(stderr,"Error while opening %s\n",(menu3)?argv[2]:argv[3]);
+            return;
+        }
+        parse_text(text,hash);
+        sorted_list=create_sorted_list(hash);        
+        if(menu1){
+            if((tmp=search_word(hash,argv[2]))==NULL)
+                fprintf(stderr,"\"%s\" not found in %s\n",argv[2],argv[3]);
+            else{
+                printf("\t> \"%s\" is found at these positions :\n",argv[2]);
+                print_list_pos(tmp->value->positions);
+            }
+        }
+        else if(menu2)
+            print_sentences_containing(text,stdout,hash,argv[2]);
+        else if(menu3)
+            print_list_word(sorted_list);
+        else if(menu4)
+            print_words_beginning_with(text,stdout,sorted_list,argv[2]);
+        else if(menu5)
+            save_index(sorted_list,argv[2]);
+        free_hash(hash);
+        free_sorted_list(&sorted_list);
+    }
+    
+}
+
 
 /*
     Print the evolution of the hashing.

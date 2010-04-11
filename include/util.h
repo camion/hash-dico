@@ -17,4 +17,5 @@ void usage(FILE *stream);
 int hash_progress_bar(long position, long size);
 long filesize(FILE* f);
 void save_index(List index,char* basename);
+void sub_main_command(int argc, char *argv[]);
 #endif

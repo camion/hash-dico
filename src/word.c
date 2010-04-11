@@ -108,7 +108,7 @@ void print_list_word(List w){
         return;
     }
     for(; w!=NULL; w=w->next)
-        printf("%p [ %s -> %p ]\n",w,w->value->word,w->next);
+        printf("%s\n",w->value->word);
 
 }
 
@@ -192,7 +192,10 @@ void free_list_word(List *w){
 
 void print_sentences_containing(FILE* text, FILE* output, List hash[], char *word){
     List w =  search_word(hash,word);
-    if(w==NULL) return;
+    if(w==NULL){
+        fprintf(output,"\"%s\" is not found in text\n",word);
+        return;
+    }
     Listpos tmp=w->value->positions;
     int i=count_list_pos(tmp);
     char c;
@@ -224,5 +227,5 @@ void print_words_beginning_with(FILE* text, FILE* output, List index, char *word
         }
     }
     if(i==1)
-        fprintf(output,"No words begins with \"%s\"\n",word);
+        fprintf(output,"No words begin with \"%s\"\n",word);
 }
