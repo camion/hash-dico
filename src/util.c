@@ -36,6 +36,28 @@ void free_hash(List *hash){
     free(hash);
 }
 
+void save_index(List index,char* file_name){
+    Listpos tmp;
+    /* if nothing to save, get out of here! */
+    if(index==NULL)
+        return;
+    FILE* target=fopen(file_name,"w");
+    if(target==NULL){
+        fprintf(stderr,"Unable to save index in %s\n",file_name);
+        return;
+    }
+    /* browses all words */
+    for(;index!=NULL;index=index->suiv){
+        /* print the word */
+        fprintf(target,"%s ",index->value->word);
+        /* browses all position */
+        for(tmp=index->value->positions;tmp!=NULL;tmp=tmp->suiv)
+            fprintf(target,"%d ",tmp->position);
+        fprintf(target,"\n");
+    }
+    fclose(target);
+}
+
 int column_count(){
 /* return the number of columns in current term */
     struct winsize ws;
@@ -53,7 +75,7 @@ void usage(FILE *stream){
     fprintf(stream,"\nExamples:\n");
     fprintf(stream,"Index -a word file\t| Check if word is in file.\n");
     fprintf(stream,"Index -p word file\t| Print word positions in file.\n");
-    fprintf(stream,"Index -P word file\t| Print santances containing word in file.\n");
+    fprintf(stream,"Index -P word file\t| Print sentences containing word in file.\n");
     fprintf(stream,"Index -l word     \t| Print sorted list of text's words.\n");
     fprintf(stream,"Index -d word file\t| Print words begining with word in the text.\n");
     fprintf(stream,"Index -D out  file\t| Save sorted list of file's words in out.DICO\n");

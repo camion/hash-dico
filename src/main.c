@@ -57,7 +57,7 @@ int main(int argc, char* argv[]){
 	    case 'v': verbose=1; break;
 	    case 'h': usage(stdout); return 0;
 	    case ':': printf("Option -%c requires an operand\n",optopt); usage(stderr); return 1;
-	    case '?': printf("Unknown option %c\n",optopt); usage(stderr); return 1;
+	    case '?': printf("Unknown option %c\n",optopt);usage(stderr); return 1;
 	    }
 	}
 	if(optind+1 != argc){
