@@ -211,3 +211,6 @@ void print_sentences_containing(FILE* text, FILE *output, List hash[], char *wor
     }
 }
 
+void print_words_beginning_with(FILE* text, FILE *output, List index, char *word){
+    
+}
