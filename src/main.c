@@ -81,7 +81,7 @@ int main(int argc, char* argv[]){
 	    case 'v': verbose=1; break;
 	    case 'h': usage(stdout); return 0;
 	    case ':': fprintf(stderr,"Option -%c requires an operand\n",optopt); usage(stderr); return 1;
-	    case '?': fprintf(stderr,"Unknown option %c\n",optopt); usage(stderr); return 1;
+	    case '?': fprintf(stderr,"Unknown option -%c\n",optopt); usage(stderr); return 1;
 	    }
 	}
 	/* if(optind+1 != argc){ */
@@ -89,21 +89,26 @@ int main(int argc, char* argv[]){
 	/*     usage(stderr); */
 	/*     return 1; */
 	/* } */
+    }else{
+	if(argv[1][0]=='-' && argv[1][1]=='h'){/*fix ./Index -h */
+	    usage(stdout);
+	    return 0;
+	}
+
 
 /**************************/
 /* interactive menu stuff */
 /**************************/
-    }else{/* interactively get user request */
+
 	menu_mode=1;
 	verbose=1; /*in this mode ... speak a lot! */
 	for(option=main_menu(); option!=EOF && option!=0; option=main_menu()){
 	    switch (option) {
-	    case 1: printf("camion");
+	    case 1:break;
 
 	    }
 	}
     }
-
 
 /*********************/
 /* do things needed  */
@@ -144,7 +149,6 @@ int main(int argc, char* argv[]){
 	save_index(l, output);
 	break;
     }
-
 
 /******************/
 /* cleaning stuff */
