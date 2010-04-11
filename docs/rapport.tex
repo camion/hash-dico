@@ -4,9 +4,9 @@
 \usepackage[utf8]{inputenc}
 \usepackage[french]{babel}
 \usepackage[T1]{fontenc}
-\author{Yoann Thomann\\Mohammed Bouabdellah}
+\author{Yoann Thomann\\Mohammed Bouabdellah\\\scriptsize ythomann@univ-mlv.fr\\\scriptsize mbouabde@univ-mlv.fr}
 \date{12/04/2010}
-\title{Documentation Indexeur de texte}
+\title{\Huge Documentation Indexeur de texte}
 
 \begin{document}
 \vspace{\fill}
@@ -14,6 +14,24 @@
 \newpage
 \tableofcontents
 \newpage
-\section{Introduction}
+\section{Description générale}
+Ce programme permet, à partir d'un texte, de représenter un dictionnaire en utilisant une table de hachage. Il indexe notamment des mots, en les associant 
+à toutes les positions des phrases dans lequels ils peuvent apparaître dans le texte. \\\\
+Il est donc possible en executant ce programme, pour un mot, de tester :
+\begin{itemize}
+\renewcommand{\labelitemi}{$\bullet$}
+\item l'appartenance d'un mot au texte
+\item l'affichage des positions d'un mot dans le texte
+\item l'affichage des phrases contenant un mot
+\item l'affichage de la liste triée des mots et de leur position
+\item l'affichage des mots commençant par un préfixe donné
+\item la sauvegarde de l'index
+\end{itemize}
+
+\section{Manuel Utilisateur}
+
+
+\section{Manuel Developpeur}
+
 
 \end{document}

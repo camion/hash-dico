@@ -59,7 +59,7 @@ void parse_text(FILE* text, List *hash_table){
 
     file_size = filesize(text);
     offset=ftell(text);
-    for(;;){
+    while(1){
         if(result==2){/* end of sentence */
             offset=ftell(text);
 	    if(verbose && (offset* 100)/file_size > last_percent)/* just sometimes */
@@ -74,8 +74,8 @@ void parse_text(FILE* text, List *hash_table){
     	insert_lexico_word(&(hash_table[key]), word, offset);
     }
     if(verbose){
-	hash_progress_bar(1, 1);/* be sure to stay with 100% */
-	printf("\n");
+	    hash_progress_bar(1, 1);/* be sure to stay with 100% */
+	    printf("\n");
     }
 }
 

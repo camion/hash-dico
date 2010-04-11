@@ -26,6 +26,7 @@ void free_sorted_list(List *l);
 List last_cell_word(List w);
 List search_word(List hash[],char* word);
 void print_sentences_containing(FILE* text, FILE *output, List hash[], char *word);
+void print_words_beginning_with(FILE* text, FILE *output, List index, char *word);
 void print_list_word(List w);
 void free_list_word(List *w);
 

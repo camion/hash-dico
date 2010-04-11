@@ -190,7 +190,7 @@ void free_list_word(List *w){
     *w=NULL;
 }
 
-void print_sentences_containing(FILE* text, FILE *output, List hash[], char *word){
+void print_sentences_containing(FILE* text, FILE* output, List hash[], char *word){
     List w =  search_word(hash,word);
     if(w==NULL) return;
     Listpos tmp=w->value->positions;
@@ -211,6 +211,12 @@ void print_sentences_containing(FILE* text, FILE *output, List hash[], char *wor
     }
 }
 
-void print_words_beginning_with(FILE* text, FILE *output, List index, char *word){
-    
+void print_words_beginning_with(FILE* text, FILE* output, List index, char *word){
+    int size_word=strlen(word);   
+    if(size_word==0 || index==NULL)
+        return;
+    for(;index!=NULL;index=index->next){
+        if(strncmp(word,index->value->word,size_word)==0)
+            fprintf(output,"%s",index->value->word);
+    }
 }

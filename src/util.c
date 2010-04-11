@@ -80,9 +80,11 @@ void save_index(List index,char* basename){
     /* browses all words */
     for(;index!=NULL;index=index->next){
         /* print the word */
-        if(fprintf(target,"%s ",index->value->word) < 1){
-	    fprintf(stderr,"Unable to write in \"%s\".",file_name);
-	}
+        if(fprintf(target,"%s ",index->value->word) == -1){
+	        fprintf(stderr,"Unable to write in \"%s\n",file_name);
+            fclose(target);
+	        return;
+    	}
 
         /* browses all position */
         for(tmp=index->value->positions;tmp!=NULL;tmp=tmp->next)
