@@ -22,6 +22,7 @@ void insert_tail_word(List *w, char* word);
 void insert_lexico_word(List *w, char* word, long offset);
 void merge_list(List *w1, const List w2);
 List create_sorted_list(List hash[]);
+void free_sorted_list(List *l);
 List last_cell_word(List w);
 List search_word(List hash[],char* word);
 void print_sentences_containing(FILE* text, FILE *output, List hash[], char *word);

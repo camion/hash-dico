@@ -166,6 +166,17 @@ List create_sorted_list(List hash[]){
     return w;
 }
 
+void free_sorted_list(List *l){
+    List tmp=*l;
+    while(*l!=NULL){
+        tmp=(*l)->next;
+        free_list_pos(&(*l)->value->positions);
+        free(*l);
+        *l=tmp;
+    }
+    *l=NULL;
+}
+
 void free_list_word(List *w){
     List tmp=*w;
     while(*w!=NULL){

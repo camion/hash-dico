@@ -12,5 +12,6 @@
 
 int get_word(FILE* stream, char* dest, size_t n);
 void parse_text(FILE* text, List *hash);
+int search_word_text(FILE* f, char* word);
 
 #endif

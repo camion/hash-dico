@@ -79,3 +79,15 @@ void parse_text(FILE* text, List *hash_table){
     }
 }
 
+
+int search_word_text(FILE* f, char* word){
+    char buffer[WORD_BUFFER];
+    int result;
+    
+    while((result=get_word(f,buffer,WORD_BUFFER))!=EOF){
+        if(strcmp(word,buffer)==0)
+            return 1;
+    }
+    return 0;
+}
+
