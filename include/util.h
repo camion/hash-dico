@@ -13,6 +13,8 @@ void free_hash(List *hash);
 int column_count();
 int line_count();
 char main_menu();
+FILE* get_input_filename();
+void get_string(char* word,char* message);
 void usage(FILE *stream);
 int hash_progress_bar(long position, long size);
 long filesize(FILE* f);

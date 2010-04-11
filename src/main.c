@@ -19,7 +19,15 @@ void quit(){
 }
 
 
-void interractive(){
+int interractive(){
+    int option;
+    int need_hash=0;
+    int need_list=0;
+    List  l=NULL;
+    List* hash_table=NULL;
+    FILE* text=NULL;
+    char* word;
+    char* output=NULL;
 
     for(option=main_menu(); option!=EOF; option=main_menu()){
 	if(option==0)return 0;
@@ -62,18 +70,11 @@ void interractive(){
     }
 
     int main(int argc, char* argv[]){
-	const char* optstring=":a:p:P:ld:D:hv";
-	int option;
+
 	extern int optind;
-	FILE* text=NULL;
-	List* hash_table=NULL;
-	List  l=NULL;
-	char* word;
-	char* output=NULL;
-	int menu=0;
-	int menu_mode=0;
-	int need_hash=0;
-	int need_list=0;
+
+
+
 
 	if(word=malloc(sizeof(char)*WORD_BUFFER) == NULL){
 	    fprintf(stderr,"Memory problem\n");
