@@ -213,10 +213,16 @@ void print_sentences_containing(FILE* text, FILE* output, List hash[], char *wor
 
 void print_words_beginning_with(FILE* text, FILE* output, List index, char *word){
     int size_word=strlen(word);   
+    int i=1;
     if(size_word==0 || index==NULL)
         return;
+    fprintf(output,"\t> Words begining with \"%s\" :\n",word);
     for(;index!=NULL;index=index->next){
-        if(strncmp(word,index->value->word,size_word)==0)
-            fprintf(output,"%s",index->value->word);
+        if(strncmp(word,index->value->word,size_word)==0){
+            fprintf(output,"[%4d] %s\n",i,index->value->word);
+            i++;
+        }
     }
+    if(i==1)
+        fprintf(output,"No words begins with \"%s\"\n",word);
 }
