@@ -219,30 +219,30 @@ void sub_main_command(int argc, char *argv[]){
             printf("\"%s\" is NOT in %s\n",argv[2],argv[3]);
         return;
     }
-    if(strcmp(argv[1],"-p")==0 || strcmp(argv[1],"-vp")==0 || strcmp(argv[1],"-pv")==0){
+    else if(strcmp(argv[1],"-p")==0 || strcmp(argv[1],"-vp")==0 || strcmp(argv[1],"-pv")==0){
         if(argc==3){
             fprintf(stderr,"Arguments missing, see usage\n");
             return;
         }
         menu1=1;
     }
-    if(strcmp(argv[1],"-P")==0 || strcmp(argv[1],"-vP")==0 || strcmp(argv[1],"-Pv")==0){
+    else if(strcmp(argv[1],"-P")==0 || strcmp(argv[1],"-vP")==0 || strcmp(argv[1],"-Pv")==0){
         if(argc==3){
             fprintf(stderr,"Arguments missing, see usage\n");
             return;
         }
         menu2=1;
     }
-    if(strcmp(argv[1],"-l")==0 || strcmp(argv[1],"-vl")==0 || strcmp(argv[1],"-lv")==0)
+    else if(strcmp(argv[1],"-l")==0 || strcmp(argv[1],"-vl")==0 || strcmp(argv[1],"-lv")==0)
         menu3=1;
-    if(strcmp(argv[1],"-d")==0 || strcmp(argv[1],"-vd")==0 || strcmp(argv[1],"-dv")==0){
+    else if(strcmp(argv[1],"-d")==0 || strcmp(argv[1],"-vd")==0 || strcmp(argv[1],"-dv")==0){
         if(argc==3){
             fprintf(stderr,"Arguments missing, see usage\n");
             return;
         }
         menu4=1;
     }
-    if(strcmp(argv[1],"-D")==0 || strcmp(argv[1],"-vD")==0 || strcmp(argv[1],"-Dv")==0){
+    else if(strcmp(argv[1],"-D")==0 || strcmp(argv[1],"-vD")==0 || strcmp(argv[1],"-Dv")==0){
         if(argc==3){
             fprintf(stderr,"Arguments missing, see usage\n");
             return;
