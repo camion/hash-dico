@@ -161,7 +161,6 @@ void usage(FILE *stream){
 
 char main_menu(){
     int columns=column_count(),lines=line_count(), i;
-    int answer=-1;
     for(i=0; i<columns; ++i)printf("%c",(i%2)?'*':'-');
     printf("\n\tMENU:\n"); lines-=2;
     for(i=0; i<columns; ++i)printf("%c",(i%2)?'*':'-');
@@ -176,9 +175,10 @@ char main_menu(){
     for(i=2; i<lines; ++i)printf("\n");/* fill lines i=2 because 2 lines after */
     for(i=0; i<columns; ++i)printf("%c",(i%2)?'*':'-');
     printf("Choice >");
-    scanf("%d",&answer);/* get the user choice */
+    i=-1;
+    scanf("%d",&i);/* get the user choice */
     printf("\n");
-    return answer;/* return the number */
+    return i;/* return the number */
 }
 
 void sub_main_command(int argc, char *argv[]){
