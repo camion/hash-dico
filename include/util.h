@@ -1,7 +1,8 @@
 #ifndef _UTIL_
 #define _UTIL_
 
-/* We use a big hash size, to make hash function sprinkle better data in hash it's better to use primary number like 1597, 28657, 514229 */
+/* We use a big hash size, to make hash function sprinkle better data in hash
+ it's better to use primary number like 1597, 28657, 514229 */
 #define HASH_SIZE 514229
 #include "../include/word.h"
 
