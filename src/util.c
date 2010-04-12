@@ -298,8 +298,12 @@ void sub_main_interractive(FILE* text){
 
     verbose=1;
     for(option=main_menu(); option!=EOF; option=main_menu()){
-        if(option==0)return;
-
+        if(option==0){
+	    /* cleaning */
+	    if(hash_table != NULL)free_hash(hash_table);
+	    if(l != NULL)free_sorted_list(&l);
+	    return;
+	}
         /* do things needed  */
         if(hash_table==NULL){
             hash_table=init_hash_table();
