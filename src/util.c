@@ -1,4 +1,5 @@
 #include <stdio.h>
+#include <unistd.h>
 #include <stdlib.h>
 #include <sys/types.h> /*winsize*/
 #include <sys/ioctl.h>
@@ -8,10 +9,10 @@
 #include  "../include/read.h"
 
 /*
-    Calculates a fingerprint for a string
-    and returns it.
-    We can with this find a key for a word
-    to store it into a hash table.
+  Calculates a fingerprint for a string
+  and returns it.
+  We can with this find a key for a word
+  to store it into a hash table.
 */
 unsigned int hash_string(char *p){
 /* maybe try with (i+1)*word[i] */
@@ -28,8 +29,8 @@ unsigned int hash_string(char *p){
 
 
 /*
-    Allocates memory for the hash
-    and init all list with NULL (calloc)
+  Allocates memory for the hash
+  and init all list with NULL (calloc)
 */
 List* init_hash_table(){
     List* hash=(List*)calloc(HASH_SIZE,sizeof(Cell));
@@ -42,7 +43,7 @@ List* init_hash_table(){
 
 
 /*
-    Free entirely the hash and every sub-list contained in hash
+  Free entirely the hash and every sub-list contained in hash
 */
 void free_hash(List *hash){
     int i;
@@ -54,8 +55,8 @@ void free_hash(List *hash){
 
 
 /*
-    Save the index in a text file
-    If there's no file_name, index is saved with a default_name
+  Save the index in a text file
+  If there's no file_name, index is saved with a default_name
 */
 void save_index(List index,char* basename){
     Listpos tmp;
@@ -76,9 +77,9 @@ void save_index(List index,char* basename){
     for(;index!=NULL;index=index->next){
         /* print the word */
         if(fprintf(target,"%s ",index->value->word) == -1){
-	        fprintf(stderr,"Unable to write in \"%s\n",file_name);
+	    fprintf(stderr,"Unable to write in \"%s\n",file_name);
             fclose(target);
-	        return;
+	    return;
     	}
 
         /* browses all position */
@@ -91,8 +92,8 @@ void save_index(List index,char* basename){
 
 
 /*
-    Count number of columns in the current terminal
-    Useful for nice print on stdout.
+  Count number of columns in the current terminal
+  Useful for nice print on stdout.
 */
 int column_count(){
     struct winsize ws;
@@ -111,10 +112,10 @@ FILE* get_input_filename(){
     char answer[FILENAME_MAX];
     FILE* text;
     for(i=0; i<columns; ++i)printf("%c",(i%2)?'*':'-');
-    printf("\n\tMENU: get input file name\n"); lines-=2;
+    printf("\n\tMENU: get input file\n"); lines-=2;
     for(i=0; i<columns; ++i)printf("%c",(i%2)?'*':'-');
     printf("\n"); lines--;
-    printf("Please enter input filename.\n"); lines--;
+    printf("Enter path to text.\n"); lines--;
     for(i=2; i<lines; ++i)printf("\n");/* fill lines i=2 because 2 lines after */
     for(i=0; i<columns; ++i)printf("%c",(i%2)?'*':'-');
     printf("Input file name >");
@@ -141,16 +142,12 @@ void get_string(char* word,char* message){
 }
 
 /*
-    Print usage of the program, how to use this program.
-    Its printed in the stream given argument *stream.
+  Print usage of the program, how to use this program.
+  Its printed in the stream given argument *stream.
 */
 void usage(FILE *stream){
-    int columns=column_count(), i;
-
-    for(i=0; i<columns; ++i)fprintf(stream,"%c",(i%2)?'*':'-');
     fprintf(stream,"\nSYNOPSIS:\nIndex [option] file\n");
-    fprintf(stream,"\tor\nIndex\n");
-    for(i=0; i<columns; ++i)fprintf(stream,"%c",(i%2)?'*':'-');
+    fprintf(stream,"\tor\nIndex [file]\n");
     fprintf(stream,"\nExamples:\n");
     fprintf(stream,"Index -a word file\t| Check if word is in file.\n");
     fprintf(stream,"Index -p word file\t| Print word positions in file.\n");
@@ -159,7 +156,6 @@ void usage(FILE *stream){
     fprintf(stream,"Index -d word file\t| Print words begining with word in the text.\n");
     fprintf(stream,"Index -D out  file\t| Save sorted list of file's words in out.DICO\n");
     fprintf(stream,"Index -h out  file\t| Print this help\n");
-    for(i=0; i<columns; ++i)fprintf(stream,"%c",(i%2)?'*':'-');
 }
 
 char main_menu(){
@@ -193,9 +189,9 @@ void sub_main_command(int argc, char *argv[]){
     FILE* text;
     size=strlen(argv[1]);
     /*if(argc==3 && !(size==2 && strcmp(argv[1],"-l")==0)){
-        fprintf(stderr,"Arguments missing, see usage\n");
-        return;
-    }*/
+      fprintf(stderr,"Arguments missing, see usage\n");
+      return;
+      }*/
     if(size!=2 && size!=3){
         fprintf(stderr,"Argument %s unknown\n",argv[1]);
         return;
@@ -279,8 +275,11 @@ void sub_main_command(int argc, char *argv[]){
             print_list_word(sorted_list);
         else if(menu4)
             print_words_beginning_with(text,stdout,sorted_list,argv[2]);
-        else if(menu5)
+        else if(menu5){
+	    if(verbose)
+		printf("Saving sorted list in \"%s.DICO\"...\n",argv[2]);
             save_index(sorted_list,argv[2]);
+	}
         free_hash(hash);
         free_sorted_list(&sorted_list);
     }
@@ -290,58 +289,74 @@ void sub_main_command(int argc, char *argv[]){
 
 void sub_main_interractive(FILE* text){
     int option;
-    int need_hash=0;
-    int need_list=0;
-    List  l=NULL;
+    List  l=NULL,tmp;
     List* hash_table=NULL;
     char word[WORD_BUFFER];
-    char *output=NULL;
+    char output[FILENAME_MAX];
 
+    verbose=1;
     for(option=main_menu(); option!=EOF; option=main_menu()){
         if(option==0)return;
-        if(option!=1)need_hash=1;
-        if(option==4 || option==5 || option==6)need_list=1;
-        /*********************/
+
         /* do things needed  */
-        /*********************/
-        if(need_list && l==NULL)need_hash=1;/* list need this */
-        if(need_hash && hash_table==NULL){
+        if(hash_table==NULL){
             hash_table=init_hash_table();
             parse_text(text, hash_table);
-            if(need_list && l==NULL)l=create_sorted_list(hash_table);
+            if(l==NULL)l=create_sorted_list(hash_table);
         }
-        /****************************/
+
         /* do explicit user request */
-        /****************************/
         switch(option){
-            case 1:
-                get_string(word,"Enter the word to search.");
-                if(hash_table==NULL){/* go faster if don't need hash to look directly in the text */
-                    if(search_word_text(text, word))printf("TRUE\n");
-                    else printf("FALSE\n");
-                }else{/* if we got hash look in this */
-                    if(search_word(hash_table, word))printf("TRUE\n");
-                    else printf("FALSE\n");
-                }
+	case 1:/* Check if word is in file. */
+	    get_string(word,"Enter the word to search.");
+	    if(hash_table==NULL){/* go faster if don't need hash to look directly in the text */
+		if(search_word_text(text, word))printf("TRUE\n");
+		else printf("FALSE\n");
+	    }else{/* if we got hash look in this */
+		if(search_word(hash_table, word))printf("TRUE\n");
+		else printf("FALSE\n");
+	    }
             break;
-            case 3:
-                get_string(word,"Enter the word.");
-                print_sentences_containing(text, stdout, hash_table, word);
+	case 2:/* Print word positions in file. */
+	    get_string(word,"Enter the word to search.");
+            if((tmp=search_word(hash_table,word))==NULL)
+                printf("\"%s\" not found.\n",word);
+            else{
+                printf("\t> \"%s\" is found at these positions :\n",word);
+                print_list_pos(tmp->value->positions);
+            }
+	    break;
+	case 3:/* Print sentences containing word in file. */
+	    get_string(word,"Enter the word.");
+	    print_sentences_containing(text, stdout, hash_table, word);
             break;
-            case 6:
-                if(verbose)
-                    printf("Saving sorted list in \"%s.DICO\"...\n",output); break;
-                save_index(l, output);
+	case 4:/* Print sorted list of text's words. */
+	    print_list_word(l);
+	    break;
+	case 5:/* Print words begining with word in the text. */
+	    get_string(word,"Enter the prefix to search.");
+	    print_words_beginning_with(text,stdout,l,word);
+	    break;
+	case 6:/* Save sorted list of file's words in out.DICO */
+	    get_string(output,"Enter output \"name\" to generate output.DICO");
+	    printf("Saving sorted list in \"%s.DICO\"...\n",output); break;
+	    save_index(l, output);
             break;
         }
+	sleep(5);
+    }
+/* cleaning */
+    if(hash_table != NULL){
+        free_hash(hash_table);
+        if(l != NULL)free_sorted_list(&l);
     }
 }
 
 
 
 /*
-    Print the evolution of the hashing.
-    Printed only if '-v' verbose option is called.
+  Print the evolution of the hashing.
+  Printed only if '-v' verbose option is called.
 */
 int hash_progress_bar(long position, long size){
     char* begin = "Hashing [";
@@ -368,14 +383,14 @@ int hash_progress_bar(long position, long size){
 
 
 /*
-    Calculates and returns size of a file
+  Calculates and returns size of a file
 */
 long filesize(FILE* f) {
-   long old_pos=ftell(f);
-   long size;
+    long old_pos=ftell(f);
+    long size;
 
-   fseek(f,0,SEEK_END);
-   size=1+ftell(f);
-   fseek(f,old_pos,SEEK_SET);
-   return size;
+    fseek(f,0,SEEK_END);
+    size=1+ftell(f);
+    fseek(f,old_pos,SEEK_SET);
+    return size;
 }
