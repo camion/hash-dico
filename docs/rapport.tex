@@ -29,7 +29,7 @@
   escapeinside={\%*}{*}}
 
 
-\author{Yoann Thomann\\Mohammed Bouabdellah\\\scriptsize ythomann@univ-mlv.fr\\\scriptsize mbouabde@univ-mlv.fr}
+\author{Yoann Thomann\\Mohammed Bouabdellah\\\scriptsize{ythomann@univ-mlv.fr\\mbouabde@univ-mlv.fr}}
 \date{12/04/2010}
 \title{\Huge Documentation\\Indexeur de texte}
 
@@ -68,24 +68,13 @@ et
 Ces informations sont accessible a partir de l'executable via la
 commande:
 \begin{lstlisting}
-USAGE
-\end{lstlisting}
-La première commande donne accès à un menu permettant de manipuler les
-diverses fonctions de l'index.\\
-La deuxième permet d'effectuer des opérations ponctuelles selon les
-arguments de la commande, cette deuxieme est particulièrement adaptée
-lors de l'utilisation du programme dans un script.\\
-L'utilisateur pour ce faire peut rediriger la sortie standard, puis la
-traiter\dots
+yoann@hp_laptop# ./Index -h
 
-
-\begin{lstlisting}
--*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*
 SYNOPSIS:
 Index [option] file
         or
-Index
--*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*
+Index [file]
+
 Examples:
 Index -a word file      | Check if word is in file.
 Index -p word file      | Print word positions in file.
@@ -94,49 +83,91 @@ Index -l text           | Print sorted list of text's words.
 Index -d word file      | Print words begining with word in the text.
 Index -D out  file      | Save sorted list of file's words in out.DICO
 Index -h out  file      | Print this help
--*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*-*
 \end{lstlisting}
 
+La première commande donne accès à un menu permettant de manipuler les
+diverses fonctions de l'index.\\
+La deuxième permet d'effectuer des opérations ponctuelles selon les
+arguments de la commande, cette deuxieme est particulièrement adaptée
+lors de l'utilisation du programme dans un script.\\
+L'utilisateur pour ce faire peut rediriger la sortie standard, puis la
+traiter\dots
+
 \subsection{Conseils d'utilisation}
-Le fichier passé en argument doit être un fichier texte. Il est possible lors du 
-traitement du texte de voir l'evolution du traitement en utilisant l'option 
-verbose \textbf{-v}.
+Le fichier passé en argument doit être un fichier texte. Il est possible lors du
+traitement du texte de voir l'evolution du traitement en utilisant l'option
+verbose \textbf{-v}.\\
+Example:
 \begin{lstlisting}
-Example :
 ./Index -pv oreste Andromaque.txt
 \end{lstlisting}
 
-
 \subsection{Recommandation}
-La principale recomandation d'utilisation dans le cas du test  d'appartenance
- d'un mot dans le texte en mode interactif,
-si l'utilisateur souhaite effectuer d'autres opérations, qui elles
-nécessitent un hash, il est recommandé de les faire avant, ce qui
-permet de chercher le mot dans le hash. Si l'opération est faite en
-premier, le mot sera directement recherché dans le hash.
-
+La principale recomandation d'utilisation dans le cas du test d'appartenance
+ d'un mot dans le texte en mode interactif, un hash est
+ systématiquement éffectué dans ce mode, ainsi si l'utilisateur
+ souhaite uniquement rechercher la présence d'un mot dans le texte, il
+ serait plus efficace d'utiliser la commande:
+\begin{lstlisting}
+./Index -a word Colomba.txt
+\end{lstlisting}
+En effet, cette commande n'engendre elle pas la création d'un hash,
+elle recherche directement dans le fichier en le parcourant alors
+qu'en mode interractif, un hash du fichier est crée et le mot est
+recherché dans celui çi.
 
 \section{Manuel Developpeur}
 \subsection{Parseur de mot}
-Pour récuperer les mots du textes, on aurait pu utiliser une fonction du type \textit{fgets/fscanf}, 
-mais ces fonctions considèrent qu'un mot est une suite de caractère séparés par des espaces, retour 
-chariot, tabulation; ce qui nous arrange pas car nous n'avons pas la même définition d'un mot.\\
-En effet, un mot est pour nous une suite de caractères espacés par des espaces, retour chariot, 
-tabulation, et divers caractères de ponctuations. Il nous a donc fallu recuperer les mots caractères 
+Pour récuperer les mots du textes, on aurait pu utiliser une fonction
+du type \textit{fgets/fscanf}, mais ces fonctions 'voient' un
+mot est comme une suite de caractère séparés par des espaces, retour
+chariot, tabulation; ce qui ne correspond pas à notre définition d'un mot.\\
+En effet, un mot est pour nous une suite de caractères espacés par des
+espaces, retour chariot, tabulation, et divers caractères de
+ponctuations. Il nous a donc fallu recuperer les mots caractères
 par caractère.\\
 Dans la récupération de mots, on peut distinguer 3 cas :
+\begin{itemize}
 \item fin de mot
 \item fin de phrase
 \item fin de texte
 \end{itemize}
 
-Face à ces 3 cas, on agit de la sorte : si une fin de mot se présente, on stocke le mot dans la table 
-de hashage ou met a jour sa position (si déjà présent), si une fin de phrase se présente, on met à 
-jour la valeur de l'offset (position dans le texte en octet); et enfin dans le cas d'une fin de texte 
-on s'arrête là.
+Face à ces 3 cas, on agit de la sorte : si une fin de mot se présente,
+on stocke le mot dans la table de hashage ou met a jour sa position
+(si déjà présent), si une fin de phrase se présente, on met à jour la
+valeur de l'offset (position dans le texte en octet); et enfin dans le
+cas d'une fin de texte on s'arrête là.
 
 \subsection{Parseur de mot}
 
+\subsection{Contrôle qualité}
+Une fois le programme fonctionnel, des tests ont été effectués, afin
+de vérifier et corriger des éventuels \textit{bugs}.\\
+Nous avons dans un premier temps utilisé le programme valgrind qui est
+un outil de debugging et de profiling.
+\begin{verbatim}
+valgrind ./Index -vp camion Colomba.txt
+...
+==4255== HEAP SUMMARY:
+==4255==     in use at exit: 0 bytes in 0 blocks
+==4255==   total heap usage: 10,043,999 allocs, 10,043,999 frees, 168,883,240 bytes allocated
+...
+==4255== ERROR SUMMARY: 0 errors from 0 contexts
+\end{verbatim}
+On constate que a la fin de l'exécussion, la totalité de la mémoire
+utilisée est bien libérée, et que l'on a aucune erreur.\\\\
+
+Dans un deuxième temps nous avons testé les \textit{entrées}
+en utilisant le fichier \textbf{/dev/random}.
+\begin{lstlisting}
+yoann@hp_laptop# ./Index -p tt /dev/random
+^C
+ctrl-c caught, exiting...
+\end{lstlisting}
+Apres un certain temps, on entre au clavier \textit{ctrl-c} afin
+d'arréter le processus. On constate ici que l'on a pas rencontré
+d'erreurs ni d'erreur mémoire \textit{segmentation fault}.
 
 
 \end{document}

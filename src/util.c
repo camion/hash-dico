@@ -155,7 +155,7 @@ void usage(FILE *stream){
     fprintf(stream,"Index -l text     \t| Print sorted list of text's words.\n");
     fprintf(stream,"Index -d word file\t| Print words begining with word in the text.\n");
     fprintf(stream,"Index -D out  file\t| Save sorted list of file's words in out.DICO\n");
-    fprintf(stream,"Index -h out  file\t| Print this help\n");
+    fprintf(stream,"Index -h          \t| Print this help\n");
 }
 
 char main_menu(){
