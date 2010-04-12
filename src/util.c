@@ -345,13 +345,11 @@ void sub_main_interractive(FILE* text){
 	    save_index(l, output);
             break;
         }
-	sleep(5);
+	sleep(2);
     }
 /* cleaning */
-    if(hash_table != NULL){
-        free_hash(hash_table);
-        if(l != NULL)free_sorted_list(&l);
-    }
+    if(hash_table != NULL)free_hash(hash_table);
+    if(l != NULL)free_sorted_list(&l);
 }
 
 
