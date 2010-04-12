@@ -29,7 +29,7 @@
   escapeinside={\%*}{*}}
 
 
-\author{Yoann Thomann\\Mohammed Bouabdellah\\\scriptsize{ythomann@univ-mlv.fr\\mbouabde@univ-mlv.fr}}
+\author{Yoann Thomann\\Mohammed Bouabdellah\\\scriptsize{ythomann@univ-mlv.fr}\\\scriptsize{mbouabde@univ-mlv.fr}}
 \date{12/04/2010}
 \title{\Huge Documentation\\Indexeur de texte}
 
@@ -116,6 +116,7 @@ elle recherche directement dans le fichier en le parcourant alors
 qu'en mode interractif, un hash du fichier est crée et le mot est
 recherché dans celui çi.
 
+\newpage
 \section{Manuel Developpeur}
 \subsection{Parseur de mot}
 Pour récuperer les mots du textes, on aurait pu utiliser une fonction
@@ -124,9 +125,9 @@ mot est comme une suite de caractère séparés par des espaces, retour
 chariot, tabulation; ce qui ne correspond pas à notre définition d'un mot.\\
 En effet, un mot est pour nous une suite de caractères espacés par des
 espaces, retour chariot, tabulation, et divers caractères de
-ponctuations. Il nous a donc fallu recuperer les mots caractères
+ponctuations. Il nous a donc fallu récuperer les mots caractère
 par caractère.\\
-Dans la récupération de mots, on peut distinguer 3 cas :
+Pour la récupération de mots, on peut distinguer 3 cas :
 \begin{itemize}
 \item fin de mot
 \item fin de phrase
@@ -137,15 +138,182 @@ Face à ces 3 cas, on agit de la sorte : si une fin de mot se présente,
 on stocke le mot dans la table de hashage ou met a jour sa position
 (si déjà présent), si une fin de phrase se présente, on met à jour la
 valeur de l'offset (position dans le texte en octet); et enfin dans le
-cas d'une fin de texte on s'arrête là.
+cas d'une fin de texte on s'arrête là.\\\\
 
 \subsection{Parseur de mot}
+Le parseur de mot est assez important car il ne récupère que des mots
+qui possèdent des caractères alphanumériques. Des suites de caractères
+comme par exemple '\textit{***}','\textit{...}' ne sont pas considerés
+comme mots.\\
+De plus, le parseur à la faculté de placer le curseur du fichier au
+bon endroit pour la lecture du prochain mot, en detectant la présence
+d'un caractère de fin de phrase après le mot. Ainsi dans la chaîne
+\textit{'Bonjour  !'}, le mot \textit{Bonjour}, suivi d'un espace, est
+detecté comme étant un mot de fin de phrase, et non pas comme un mot
+courant d'une phrase.
+\newpage
+Ce parseur correspond dans ce programme à la fonction, dont voici le
+prototype :
+
+\begin{lstlisting}
+int get_word(FILE* stream, char* dest, size_t n);
+\end{lstlisting}
+Valeurs de retour :
+\begin{itemize}
+\item EOF   : Fin de fichier
+\item 1     : Fin de mot
+\item 2     : Fin de phrase
+\end{itemize}
+
+Paramètres :
+\begin{itemize}
+\item stream    : flux dans lequel on récupère nos mots (bien ouvert
+  au préalable)
+\item dest      : chaîne de caractère dans lequel le mot sera stocké
+\item n         : taille de dest, pour eviter des debordements
+\end{itemize}
+
+\subsection{Structures utilisées}
+Le scheima général de l'architecture structurelle est le suivant.
+\\
+\includegraphics[width=\textwidth]{schema_projet.jpg}
+\\
+
+Dans ce programme, on a besoin de représenter des mots. Pour ce faire,
+On définit un mot comme étant une chaîne de caractères accompagnée
+d'une liste de positions des phrases dans lequel il apparaît.\\
+On utilise donc la structure suivante :
+\begin{lstlisting}
+typedef struct cellword{
+    char *word;
+    Lispos l;
+}Cellword;
+\end{lstlisting}
+
+Une liste de position est définie comme étant une position entière
+accompagnée d'un pointeur vers la position suivante.
+
+\begin{lstlisting}
+typedef struct cellpos{
+	long position;
+	struct cellpos* next;
+}Cellpos,*Listpos;
+\end{lstlisting}
+
+On a donc la posibilité de représenter un mot accompagné de la liste
+de ses positions. Il nous faut maintenant, pour manipuler des listes
+de mots, une structure permettant de lier ces mots entre eux.\\
+Cette structure doit contenir un mot du type que l'on vient de
+définir, et un pointeur vers le prochain mot.
+
+\begin{lstlisting}
+typedef struct cell{
+	Cellword *value;
+	struct cell* next;
+}Cell,*List;
+\end{lstlisting}
+
+Pour detecter la fin d'une phrase ou la fin d'un mot, deux macros ont
+été definies :
+
+\begin{lstlisting}
+#define END_OF_WORD(c) ((c==' ' || c==',' || c=='\n' || c=='\t' || c==';' || c=='*' || c=='-' || c=='\''))
+#define END_OF_PHRASE(c) ((c=='.' || c=='?' || c=='!'))
+\end{lstlisting}
+
+Il est donc \textbf{très simple} pour un programmeur d'ajouter ses caractères
+de fin de mots/phrases.
+
+\subsection{Hachage ouvert}
+Pour stocker nos mots, on utilise un hachage ouvert. On a donc besoin
+d'un tableau assez grand qui contiendra des listes de mots. Il est usuel
+aussi pour mieu répartir le hachage d'utiliser \textbf{un nombre
+  premier} comme taille de ce tableau.\\
+Pour insérer un mot dans le tableau on utilise une fonction de hachage
+qui, à partir d'une chaîne de caractère, calcule une empreinte
+permettant de situer le mot dans notre table. La liste dans laquelle
+doit être comtenue mot est donc:\\
+\textit{hashTable[hash(mot)]}.\\
+L'avantage d'utiliser une table de hachage est que l'accès à un élement
+se fait en temps constant, avec un petit temps d'amortissement
+(parcours de la liste de mots).\\\\
+
+Les cases de notre table contiennent donc des listes de mots
+triés. L'insertion dans notre table correspond à une insertion dans
+une liste dont la taille, si le tableau est assez grand, est majorée par une
+constante. L'insertion dans notre table de hachage possède donc une
+complexité constante.
+
+\subsection{Gestion des listes}
+Les listes de mots doivent être triées. L'insertion se fait donc en
+respectant l'ordre lexicographique. Etant donné que l'on dispose d'une
+liste simplement chainée, l'insertion est donc complexe. En effet, il
+faut deux curseurs parcourant la liste en stockant la cellule courante
+ainsi que la cellule précedente. Voici le prototype de la fonction
+effectuant cette insertion :
+
+\begin{lstlisting}
+void insert_lexico_word(List *w, char* word, long offset);
+\end{lstlisting}
+
+Et pour éviter une complexité importante, cette fonction a le bon goût
+de rechercher le mot à ajouter pour eviter l'insertion de doublon et
+de trouver la bonne place où mettre le mot, et ce en un seul passage
+dans la liste.\\\\
+
+En ce qui concerne la liste des position, on effectue des insertions
+en tête de liste. En effet, vu qu'il n'y a pas de contraintes sur
+l'ordre des positions on n'a pas besoin de reparcourir toute la liste.
+
+\subsection{Création de la liste triée}
+Après hachage complet du texte, on possède une multitude de listes
+triées dans le tableau de hash. Pour obtenir une seule liste triée, on
+doit alors fusionner toutes ces listes.\\
+
+On cree alors une liste parallèle, on alloue \textbf{que} de quoi stocker
+un mot (Cellword) et un pointeur vers les mot suivant.\\\\
+
+\textbf{ATTENTION :} On ne doit pas creer une nouvelle liste complète,
+mais seulement une liste parallèle pointant sur les mots contenus dans
+la table. En effet cela reviendrait relativement cher en place et en
+temps d'allouer une nouvelle liste contenant des données déjà
+existantes. De plus, \textbf{il ne faut pas non plus fusionner directement les
+liste existantes entres elles}. En effet, cela effectuera un
+remaniements des liens entre les cellules et nous donnera bien une
+liste triée, mais aura aussi pour effet de corrompre notre table de
+hachage, puisque des mots possédant une clé X pourront être présent
+dans une liste de mots possédant une clé Y, ce qui est totalement à
+l'encontre du principe de hachage :
+
+\begin{center}
+Soit $f$ une fonction de hachage et $E$ ensemble des mots du test:
+\\ $\forall(x,y) \in E^{2}, (x \ne y \Rightarrow f(x) \ne f(y))$\\
+Une telle fonction doit être injective et donc ne pas retourner une
+même clé pour deux mots différents.
+\end{center}
+
+On a donc une liste pointant sur le champs \textit{list->value} des
+mots existant.\\
+Enfin, pour creer notre liste, on parcours notre table et fusionne
+toutes les listes avec celle créee en parallèle.\\
+Cette fusion correspond dans ce programme aux fonctions, dont voici
+les prototypes :
+
+\begin{lstlisting}
+void merge_list(List *w1, const List w2);
+List create_sorted_list(List hash[]);
+\end{lstlisting}
+
+La fonction \textit{create\_sorted\_list} parcours la table de hachage
+et fusionne en appellant \textit{merge\_list} toutes les listes de la
+table, puis renvoie cette liste triée.
 
 \subsection{Contrôle qualité}
 Une fois le programme fonctionnel, des tests ont été effectués, afin
 de vérifier et corriger des éventuels \textit{bugs}.\\
 Nous avons dans un premier temps utilisé le programme valgrind qui est
 un outil de debugging et de profiling.
+
 \begin{verbatim}
 valgrind ./Index -vp camion Colomba.txt
 ...
@@ -155,16 +323,19 @@ valgrind ./Index -vp camion Colomba.txt
 ...
 ==4255== ERROR SUMMARY: 0 errors from 0 contexts
 \end{verbatim}
+
 On constate que a la fin de l'exécussion, la totalité de la mémoire
 utilisée est bien libérée, et que l'on a aucune erreur.\\\\
 
 Dans un deuxième temps nous avons testé les \textit{entrées}
 en utilisant le fichier \textbf{/dev/random}.
+
 \begin{lstlisting}
 yoann@hp_laptop# ./Index -p tt /dev/random
 ^C
 ctrl-c caught, exiting...
 \end{lstlisting}
+
 Apres un certain temps, on entre au clavier \textit{ctrl-c} afin
 d'arréter le processus. On constate ici que l'on a pas rencontré
 d'erreurs ni d'erreur mémoire \textit{segmentation fault}.
