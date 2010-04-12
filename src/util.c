@@ -119,7 +119,7 @@ FILE* get_input_filename(){
     for(i=2; i<lines; ++i)printf("\n");/* fill lines i=2 because 2 lines after */
     for(i=0; i<columns; ++i)printf("%c",(i%2)?'*':'-');
     printf("Input file name >");
-    scanf("%s",answer);
+    (void)scanf("%s",answer);
     printf("\n");
     if((text=fopen(answer,"r"))==NULL)
     	return get_input_filename();
