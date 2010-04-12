@@ -125,7 +125,7 @@ void merge_list(List *w1, const List w2){
         return;
     /* for every element of w2 */
     for(tmp3=w2;tmp3!=NULL;tmp3=tmp3->next){
-        new_cell=(List)malloc(sizeof(List));
+        new_cell=malloc(sizeof(Cell));
         new_cell->value=tmp3->value;
         new_cell->next=NULL;
         /* if the list *w is empty */
@@ -170,7 +170,6 @@ void free_sorted_list(List *l){
     List tmp=*l;
     while(*l!=NULL){
         tmp=(*l)->next;
-        free_list_pos(&(*l)->value->positions);
         free(*l);
         *l=tmp;
     }

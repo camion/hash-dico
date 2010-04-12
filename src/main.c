@@ -19,27 +19,30 @@ void quit(){
 }
 
 int main(int argc, char* argv[]){
-	/* execute quit() on SIGINT (ctrl-c) */
-	signal(SIGINT,quit);
-	/* check if root execute the program */
-	if(getgid() == 0)fprintf(stderr,"You shouldn't run %s as root.\n",argv[0]);
-    FILE* text=NULL;
-	if(argc==1){
-	    text=get_input_filename();
-	    sub_main_interractive(text);
+   FILE* text=NULL;
+
+    /* execute quit() on SIGINT (ctrl-c) */
+    signal(SIGINT,quit);
+    /* check if root execute the program */
+    if(getgid() == 0)fprintf(stderr,"You shouldn't run %s as root.\n",argv[0]);
+
+    if(argc==1){
+	text=get_input_filename();
+	sub_main_interractive(text);
         fclose(text);
-	}
+    }
     else if(argc==2){
         if(strcmp(argv[1],"-h")==0){
             usage(stdout);
             return 0;
         }
-	    text=fopen(argv[1],"r");
+	text=fopen(argv[1],"r");
+	if(text==NULL)text=get_input_filename();
         sub_main_interractive(text);
         fclose(text);
-	}
-	else if(argc>2)
-	    sub_main_command(argc,argv);
+    }
+    else
+	sub_main_command(argc,argv);
 
     return 0;
 }
