@@ -130,13 +130,13 @@ void get_string(char* word,char* message){
     int columns=column_count(),lines=line_count(), i;
 
     for(i=0; i<columns; ++i)printf("%c",(i%2)?'*':'-');
-    printf("\n\tMENU: get input file name\n"); lines-=2;
+    printf("\n\tMENU:\n"); lines-=2;
     for(i=0; i<columns; ++i)printf("%c",(i%2)?'*':'-');
     printf("\n"); lines--;
     printf("%s",message); lines--;
     for(i=2; i<lines; ++i)printf("\n");/* fill lines i=2 because 2 lines after */
     for(i=0; i<columns; ++i)printf("%c",(i%2)?'*':'-');
-    printf("Input file name >");
+    printf(">");
     scanf("%s",word);
     printf("\n");
 }

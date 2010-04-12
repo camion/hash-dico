@@ -1,5 +1,5 @@
 CC=gcc
-CFLAGS=-Wall -ansi -g -O2
+CFLAGS=-Wall -ansi
 
 EXEC=Index
 SRC=$(wildcard src/*.c)
