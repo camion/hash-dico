@@ -127,6 +127,7 @@ FILE* get_input_filename(){
 }
 
 void get_string(char* word,char* message){
+/*you should not ahve any \n in message and strlen(message) < columns*/
     int columns=column_count(),lines=line_count(), i;
 
     for(i=0; i<columns; ++i)printf("%c",(i%2)?'*':'-');
@@ -160,7 +161,7 @@ void usage(FILE *stream){
 
 char main_menu(){
     int columns=column_count(),lines=line_count(), i;
-    char answer;
+    int answer=-1;
     for(i=0; i<columns; ++i)printf("%c",(i%2)?'*':'-');
     printf("\n\tMENU:\n"); lines-=2;
     for(i=0; i<columns; ++i)printf("%c",(i%2)?'*':'-');
@@ -175,9 +176,9 @@ char main_menu(){
     for(i=2; i<lines; ++i)printf("\n");/* fill lines i=2 because 2 lines after */
     for(i=0; i<columns; ++i)printf("%c",(i%2)?'*':'-');
     printf("Choice >");
-    answer=getchar();
+    scanf("%d",&answer);/* get the user choice */
     printf("\n");
-    return answer-'0';/* return the number */
+    return answer;/* return the number */
 }
 
 void sub_main_command(int argc, char *argv[]){
